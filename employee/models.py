@@ -1,6 +1,5 @@
 from django.db import models
-from datetime import date
-
+import datetime
 
 class Position(models.Model):
     name = models.CharField(max_length=250)
@@ -40,8 +39,8 @@ class Competence(models.Model):
 
 class Skill(models.Model):
     DOMAIN = [
-        ('Hard_skills', 'Hard skills'),
-        ('Soft_skills', 'Soft skills'),
+        ('Hard skills', 'Hard skills'),
+        ('Soft skills', 'Soft skills'),
     ]
     name = models.CharField(max_length=250)
     domain = models.CharField(max_length=12, choices=DOMAIN)
@@ -78,7 +77,7 @@ class Employee(models.Model):
         on_delete=models.SET_NULL,
         related_name='employee',
         null=True,
-        blank=False,    
+        blank=False,
     )
     team = models.ForeignKey(
         Team,
@@ -89,6 +88,7 @@ class Employee(models.Model):
         blank=False,
     )
     graide = models.CharField(max_length=8, choices=GRADE, default=GRADE[0])
+    date_last_rating = models.DateTimeField(default=datetime.datetime.now)
 
     class Meta:
         ordering = ['fio',]
@@ -96,20 +96,16 @@ class Employee(models.Model):
         verbose_name_plural = 'Сотрудники'
 
     def __str__(self):
-        return self.fio 
+        return self.fio
 
 
 class Rating(models.Model):
     RATING = [
-        ('no_value', 'Не оценивался'),
-        ('lack', 'Не владеет'),
-        ('base', 'Базовый'),
-        ('confident', 'Уверенный'),
-        ('expert', 'Экспертный'),
-    ]
-    DOMAIN = [
-        ('Hard_skills', 'Hard skills'),
-        ('Soft_skills', 'Soft skills'),
+        ('Не оценивался', 'Не оценивался'),
+        ('Не владеет', 'Не владеет'),
+        ('Базовый', 'Базовый'),
+        ('Уверенный', 'Уверенный'),
+        ('Экспертный', 'Экспертный'),
     ]
 
     fio = models.ForeignKey(
@@ -133,18 +129,19 @@ class Rating(models.Model):
         null=True,
         blank=False,
     )
-    rating = models.CharField(max_length=12, choices=RATING, default=RATING[0])
+    rating = models.CharField(max_length=13, choices=RATING, default=RATING[0])
+    key_people = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    
+
     class Meta:
-        ordering = ['fio','skill',]
+        ordering = ['fio', 'skill',]
         verbose_name = 'Рейтинг'
         verbose_name_plural = 'Рейтинги'
-    
+
     def __str__(self):
         return (
             f'оценка {self.fio.fio} по {self.skill.name}, '
             f'{self.competence.name} на '
-            f'{self.updated.strftime("%d.%m.%Y")} -- {self.rating}!'       
+            f'{self.updated.strftime("%d.%m.%Y")} -- {self.rating}!'
         )

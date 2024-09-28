@@ -36,11 +36,30 @@ Starsmap - это система по оценке компетенций сот
  - состояние вовлеченности сотрудников 
 
 ## Запуск
+- подготовка, скачиваем с гит
+``` shell
+git clone https://github.com/Krasikoff/Starsmap
+```
+- переходим в каталог Starsmap или открываем в любимом IDE
 
 ``` shell
 python -m venv venv
 source venv/bin/activate
 pip install django==4.2
 pip install --upgrade pip
+python manage.py makemigrations
+python manage.py migrate
 ```
-
+- наполняем БД, если требуется
+в BASE_DIR должен лежать data.csv в определенном формате.
+``` shell
+python manage.py upload_data
+```
+- запуск
+``` shell
+python manage.py runserver  
+```
+- создаем первого суперпользователя
+``` shell
+python manage.py createsuperuser
+```

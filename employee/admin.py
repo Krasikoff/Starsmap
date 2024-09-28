@@ -10,7 +10,10 @@ from .models import Skill
 admin.site.register(Team)
 admin.site.register(Competence)
 admin.site.register(Skill)
-admin.site.register(Rating)
+@admin.register(Rating)
+class PostAdmin(admin.ModelAdmin):
+#admin.site.register(Rating)
+    search_fields = ['fio',]
 admin.site.register(Employee)
 admin.site.register(Position)
 admin.site.empty_value_display = 'Не задано'
