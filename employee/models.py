@@ -1,7 +1,10 @@
 from django.db import models
 import datetime
 
+
 class Position(models.Model):
+    """Таблица должностей."""
+
     name = models.CharField(max_length=250)
 
     class Meta:
@@ -14,6 +17,7 @@ class Position(models.Model):
 
 
 class Team(models.Model):
+    """Таблица команд."""
     name = models.CharField(max_length=250)
 
     class Meta:
@@ -26,6 +30,8 @@ class Team(models.Model):
 
 
 class Competence(models.Model):
+    """Таблица компетенций."""
+
     name = models.CharField(max_length=250)
 
     class Meta:
@@ -38,6 +44,8 @@ class Competence(models.Model):
 
 
 class Skill(models.Model):
+    """Таблица навыков."""
+
     DOMAIN = [
         ('Hard skills', 'Hard skills'),
         ('Soft skills', 'Soft skills'),
@@ -63,6 +71,8 @@ class Skill(models.Model):
 
 
 class Employee(models.Model):
+    """Таблица сотрудников."""
+
     GRADE = [
         ('No value', 'No value'),
         ('Junior', 'Junior'),
@@ -100,6 +110,8 @@ class Employee(models.Model):
 
 
 class Rating(models.Model):
+    """Таблица оценок навыков, компетенций."""
+
     RATING = [
         ('Не оценивался', 'Не оценивался'),
         ('Не владеет', 'Не владеет'),
