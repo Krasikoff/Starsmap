@@ -9,8 +9,12 @@ from .models import Skill
 
 admin.site.register(Team)
 admin.site.register(Competence)
-admin.site.register(Skill)
 admin.site.register(Position)
+
+
+@admin.register(Skill)
+class SkillAdmin(admin.ModelAdmin):
+    list_filter = ['competence',]
 
 
 @admin.register(Rating)
