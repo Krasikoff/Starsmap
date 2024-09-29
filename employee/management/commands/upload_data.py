@@ -71,4 +71,10 @@ class Command(BaseCommand):
                     )
                     print('-----------------------')    
                     print(raiting)
+            print('Должностей: ', Position.objects.count())
+            print('Команд: ', Team.objects.count())
+            print('Сотрудников: ', Employee.objects.count())
+            print('Навыков: ', Skill.objects.count())
+            print('Компетенций: ', Competence.objects.count())
+            print('Рейтингов: ', Rating.objects.count())
         return None
