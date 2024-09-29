@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+  {{ line.fio|lower }}
+{% endblock %}
+{% block content %}
+  <h1 class="pb-2 mb-0">{{ line.fio }}</h1> 
+  <div class="row mt-3">
+    <div class="col-12 col-md-6">
+      <h2> Команда</h2>
+      <p> {{ line.team }}</p>      
+      <h2> Грэйд</h2>
+      <p>{{ line.grade }}</p>      
+    </div> 
+    <div class="col-12 col-md-6 mb-3">
+      <img 
+        class="img-fluid" 
+        height="400" width="300"
+        src="{% static 'img/image-holder.png' %}"
+        >      
+    </div>
+  </div>     
+{% endblock %}
+ 
