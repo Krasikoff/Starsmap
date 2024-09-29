@@ -97,7 +97,7 @@ class Employee(models.Model):
         null=True,
         blank=False,
     )
-    graide = models.CharField(max_length=8, choices=GRADE, default=GRADE[0])
+    grade = models.CharField(max_length=8, choices=GRADE, default=GRADE[0])
     date_last_rating = models.DateTimeField(default=datetime.datetime.now)
 
     class Meta:
@@ -143,8 +143,8 @@ class Rating(models.Model):
     )
     rating = models.CharField(max_length=13, choices=RATING, default=RATING[0])
     key_people = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(default=datetime.datetime.now)
+    updated = models.DateTimeField(default=datetime.datetime.now)
 
     class Meta:
         ordering = ['fio', 'skill',]

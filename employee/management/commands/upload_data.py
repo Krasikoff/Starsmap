@@ -44,7 +44,7 @@ class Command(BaseCommand):
                          fio=data[1],             
                          position=position,
                          team=team,
-                         graide=data[4],
+                         grade=data[4],
                          date_last_rating=cr_date
                     )
                     (competence, _) = Competence.objects.get_or_create(name=data[7])
@@ -55,8 +55,10 @@ class Command(BaseCommand):
                     )
                     try:
                         c_date = datetime.strptime(data[5], '%d.%m.%Y')
+                        u_date = datetime.strptime(data[9], '%d.%m.%Y')
                     except Exception as e:
                         c_date = datetime.strptime(data[5], '%Y-%m-%d %H:%M:%S')
+                        u_date = datetime.strptime(data[9], '%Y-%m-%d %H:%M:%S')
                     if data[19] == 'да':
                         key_people = True
                     else:
@@ -64,6 +66,7 @@ class Command(BaseCommand):
                     (raiting, _) = Rating.objects.get_or_create(
                         fio=employee,                    
                         created_at=c_date,
+                        updated=u_date,
                         skill=skill,
                         competence=competence,
                         rating=data[11],

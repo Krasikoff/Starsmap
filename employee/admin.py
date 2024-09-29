@@ -20,7 +20,7 @@ class RaitingAdmin(admin.ModelAdmin):
 
 @admin.register(Employee)
 class EmployeeAdmin(admin.ModelAdmin):
-    search_fields = ['fio',]
+    list_filter = ['team','grade']
 
 
 admin.site.empty_value_display = 'Не задано'
