@@ -1,6 +1,6 @@
 from django.db import models
 import datetime
-
+from employee.constants import RATING
 
 class Position(models.Model):
     """Таблица должностей."""
@@ -112,14 +112,6 @@ class Employee(models.Model):
 class Rating(models.Model):
     """Таблица оценок навыков, компетенций."""
 
-    RATING = [
-        ('Не оценивался', 'Не оценивался'),
-        ('Не владеет', 'Не владеет'),
-        ('Базовый', 'Базовый'),
-        ('Уверенный', 'Уверенный'),
-        ('Экспертный', 'Экспертный'),
-    ]
-
     fio = models.ForeignKey(
         Employee,
         on_delete=models.CASCADE,
@@ -141,7 +133,7 @@ class Rating(models.Model):
         null=True,
         blank=False,
     )
-    rating = models.CharField(max_length=13, choices=RATING, default=RATING[0])
+    rating = models.IntegerField(choices=RATING, default=RATING[0])
     key_people = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=datetime.datetime.now)
     updated = models.DateTimeField(default=datetime.datetime.now)
