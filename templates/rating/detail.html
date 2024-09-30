@@ -1,24 +1,31 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}
-  {{ line.fio|lower }}
+  {{ employee.fio|lower }}
 {% endblock %}
 {% block content %}
-  <h1 class="pb-2 mb-0">{{ line.fio }}</h1> 
+
+<h2 class="pb-2 mb-0">{{ employee.fio }}</h2> 
+  <hr size="6" width="50%" align="left" color="green">
+    <p> skill | competence | rating | key peolpe | на дату</p>
+  <hr size="6" width="50%" align="left" color="green">
+
+{% for line in rating_lines %}
   <div class="row mt-3">
-    <div class="col-12 col-md-6">
-      <h2> Команда</h2>
-      <p> {{ line.team }}</p>      
-      <h2> Грэйд</h2>
-      <p>{{ line.grade }}</p>      
-    </div> 
-    <div class="col-12 col-md-6 mb-3">
-      <img 
+<!--    <div class="col-12 col-md-6">  -->
+      
+      <p> {{ line.skill }} - {{ line.competence }} - {{ line.rating }} - key_people: {{ line.key_people }} на {{line.updated }}</p>
+
+<!--   </div> -->
+    <!-- <div class="col-12 col-md-6 mb-3">
+      <img
         class="img-fluid" 
         height="400" width="300"
         src="{% static 'img/image-holder.png' %}"
         >      
-    </div>
-  </div>     
+    </div> -->
+  </div>  
+{% endfor %} 
+<hr size="6" width="50%" align="left" color="green">
 {% endblock %}
  
