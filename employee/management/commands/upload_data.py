@@ -9,6 +9,7 @@ from employee.models import (
     Competence,
     Rating,
 )
+from employee.constants import RATING
 
 
 class Command(BaseCommand):
@@ -59,21 +60,34 @@ class Command(BaseCommand):
                     except Exception as e:
                         c_date = datetime.strptime(data[5], '%Y-%m-%d %H:%M:%S')
                         u_date = datetime.strptime(data[9], '%Y-%m-%d %H:%M:%S')
+
                     if data[19] == 'да':
                         key_people = True
                     else:
                         key_people = False
-                    (raiting, _) = Rating.objects.get_or_create(
+                    match data[11]:
+                        case 'Не владеет':
+                            integer_rating = 1
+                        case 'Базовый':
+                            integer_rating = 2
+                        case 'Уверенный':
+                            integer_rating = 3
+                        case 'Экспертный':
+                            integer_rating = 4
+                        case _:
+                            integer_rating = 0
+
+                    (rating, _) = Rating.objects.get_or_create(
                         fio=employee,                    
                         created_at=c_date,
                         updated=u_date,
                         skill=skill,
                         competence=competence,
-                        rating=data[11],
+                        rating=integer_rating,
                         key_people=key_people
                     )
                     print('-----------------------')    
-                    print(raiting)
+                    print(rating)
             print('Должностей: ', Position.objects.count())
             print('Команд: ', Team.objects.count())
             print('Сотрудников: ', Employee.objects.count())
