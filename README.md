@@ -63,3 +63,7 @@ python manage.py runserver
 ``` shell
 python manage.py createsuperuser
 ```
+- для сбора статической API документации
+``` shell
+python3 manage.py generateschema > schema.yaml 
+```
