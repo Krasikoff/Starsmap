@@ -25,6 +25,7 @@ urlpatterns = [
     path('', include('homepage.urls', namespace='homepage')),
     path('rating/', include('rating.urls', namespace='rating')),
     path('about/', include('about.urls', namespace='about')),
+    path('', include('employee.urls')),
     path('admin/', admin.site.urls),
 ]
 
