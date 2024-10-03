@@ -1,11 +1,11 @@
 from django.contrib import admin
-from .models import Employee
-from .models import Rating
-from .models import Position
-from .models import Team
-from .models import Competence
-from .models import Skill
+from django.contrib.auth import get_user_model
+from .models import(
+    Rating, Position, Team, Competence, Skill, Vacancy, Candidate,
+)
 
+
+User = get_user_model()
 
 admin.site.register(Team)
 admin.site.register(Competence)
@@ -14,17 +14,27 @@ admin.site.register(Position)
 
 @admin.register(Skill)
 class SkillAdmin(admin.ModelAdmin):
-    list_filter = ['competence',]
+    list_filter = ['domain','competence',]
 
 
 @admin.register(Rating)
 class RaitingAdmin(admin.ModelAdmin):
-    list_filter = ['fio',]
+    list_filter = ['user',]
 
 
-@admin.register(Employee)
-class EmployeeAdmin(admin.ModelAdmin):
-    list_filter = ['team','grade']
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    list_filter = ['team','grade','position']
+
+
+@admin.register(Vacancy)
+class VacancyAdmin(admin.ModelAdmin):
+    list_filter = ['position',]
+
+
+@admin.register(Candidate)
+class CandidateAdmin(admin.ModelAdmin):
+    list_filter = ['link',]
 
 
 admin.site.empty_value_display = 'Не задано'
