@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
-from .models import(
-    Rating, Position, Team, Competence, Skill, Vacancy, Candidate,
+from .models import (
+    Rating, Position, Team, Competence, Skill, Vacancy, 
+    Candidate, LastDateMatch
 )
 
 
@@ -20,6 +21,11 @@ class SkillAdmin(admin.ModelAdmin):
 @admin.register(Rating)
 class RaitingAdmin(admin.ModelAdmin):
     list_filter = ['user',]
+
+
+@admin.register(LastDateMatch)
+class LastDateMatchAdmin(admin.ModelAdmin):
+    list_filter = ['user', 'skill', 'date_last_score']
 
 
 @admin.register(User)

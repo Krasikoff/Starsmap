@@ -27,6 +27,6 @@ USER = 'user'
 ROLE_CHOICES = (
     (ADMIN, 'Администратор'),
     (HR, 'HR'),
-    (TEAM_CHIEF, 'Главный в команде'),
+    (TEAM_CHIEF, 'Руководитель'),
     (USER, 'Пользователь')
 )
