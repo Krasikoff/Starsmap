@@ -137,6 +137,10 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+# Custom settings
+AUTH_USER_MODEL = 'employee.User'
+
 SWAGGER_SETTINGS = {
    'SECURITY_DEFINITIONS': {
       'Bearer': {
