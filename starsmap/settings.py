@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'homepage.apps.HomepageConfig',
     'rating.apps.RatingConfig',
     'about.apps.AboutConfig',
+    'api.apps.ApiConfig',
     'drf_yasg',
 
 ]
@@ -156,3 +157,5 @@ CORS_URLS_REGEX = r'^/api/.*$'
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
 ]
+
+PERSONAL_ACCOUNT_URL_NAME = 'me'

@@ -115,7 +115,8 @@ class Rating(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        verbose_name='Сотрудник'
+        related_name='rating',
+        verbose_name='Сотрудник',
     )
     skill = models.ForeignKey(
         Skill,
@@ -133,9 +134,9 @@ class Rating(models.Model):
         null=True,
         blank=False,
     )
-    need_to_study = models.BooleanField(default=False)
     score = models.IntegerField(choices=RATING, default=RATING[0])
     date_score = models.DateField(default=datetime.datetime.now)
+    need_to_study = models.BooleanField(default=False)
     date = models.DateField(default=datetime.datetime.now)
     date_start = models.DateField(default=datetime.datetime.now)
     date_end = models.DateField(default=datetime.datetime.now)
@@ -163,7 +164,8 @@ class LastDateMatch(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        verbose_name='Сотрудник'
+        related_name='lastdatematch',
+        verbose_name='Сотрудник',
     )
     skill = models.ForeignKey(
         Skill,
@@ -233,6 +235,7 @@ class Candidate(models.Model):
     
     vacancy = models.ForeignKey(
         Vacancy,
+        related_name='condidate',
         verbose_name='Вакансия',
         on_delete=models.CASCADE,
     )
