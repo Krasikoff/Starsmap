@@ -1,0 +1,72 @@
+1. В каждой таблице django создает автоматом ID.
+2. Если не указывать специально доп. таблицу связи для many-to-many, django сделает это автоматом.
+В этой схеме у нас пока одна team-user.
+3. Все таблицы описаны для django в классами в employee.models.
+
+===================
+Position:
+"""Таблица должностей."""
+name CharField 'Должность'
+-------------------
+Team:
+"""Таблица команд."""
+name CharField 'Команда'
+-------------------
+Competence:
+"""Таблица компетенций."""
+name CharField 'Компетенция'
+-------------------
+Skill:
+"""Таблица навыков."""
+name CharField
+domain CharField,choices
+competence ForeignKey(Competence,)
+-------------------
+User:
+"""Таблица сотрудников."""
+first_name CharField
+last_name CharField
+date_hire DateField
+date_fire DateField
+grade CharField, choices=GRADE
+key_people BooleanField
+bus_factor BooleanField
+models.FloatField
+position ForeignKey(Position,)
+team ManyToManyField(Team,)
+role CharField(choices=ROLE_CHOICES,)
+--------------------
+Rating:
+"""Таблица оценок навыков, компетенций - временная таблица."""
+user ForeignKey(User,)
+skill ForeignKey(Skill,)
+competence ForeignKey(Competence,)
+need_to_study BooleanField
+score IntegerField(choices=RATING,)
+date_score DateField
+date_demand DateField
+date_start DateField
+date_end DateField
+match BooleanField
+chief_proof BooleanField
+-------------------------
+LastDateMatch:
+"""Таблица дата последней оценки и соответствие навыка по сотруднику и навыку.
+ее можно или развить как статическую таблицу, или убрать и перенести данные в raiting."""     
+user ForeignKey(User,)
+skill ForeignKey(Skill,)
+competence ForeignKey(Competence,)
+match BooleanField
+date_last_score DateField
+----------------------------
+Vacancy:
+"""Таблица вакансий (требуемых должностей)"""
+closed BooleanField
+position ForeignKey(Position,)
+team ForeignKey(Team,)
+------------------------------
+Candidate:
+    """Линки на HH.RU привязанные к вакансии (должности)."""
+vacancy ForeignKey(Vacancy,)
+link URLField
+------------------------------

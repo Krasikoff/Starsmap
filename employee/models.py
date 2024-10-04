@@ -156,6 +156,10 @@ class Rating(models.Model):
 
 
 class LastDateMatch(models.Model):
+    """Таблица дата последней оценки и соответствие навыка по сотруднику и навыку.
+    
+    ее можно или развить как статическую таблицу, или убрать и перенести данные в raiting.
+    """     
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -195,6 +199,8 @@ class LastDateMatch(models.Model):
 
 
 class Vacancy(models.Model):
+    """Таблица вакансий (требуемых должностей)"""
+
     closed = models.BooleanField(default=False)
     position = models.ForeignKey(
         Position,
@@ -223,6 +229,8 @@ class Vacancy(models.Model):
 
 
 class Candidate(models.Model):
+    """Линки на HH.RU привязанные к вакансии (должности)."""
+    
     vacancy = models.ForeignKey(
         Vacancy,
         verbose_name='Вакансия',
