@@ -1,9 +1,9 @@
-from django.shortcuts import render
-from api.serializers import (UserSerializer, TeamSerializer, SkillSerializer, RaitingSerializer)
-from rest_framework import permissions as main_permissions
-from rest_framework import response, status, views, viewsets
+# from django.shortcuts import render
+from rest_framework import viewsets
 
-from employee.models import User, Team, Competence, Skill, Rating
+from api.serializers import (LastRatingSerializer, RaitingSerializer,
+                             SkillSerializer, TeamSerializer, UserSerializer)
+from employee.models import Competence, LastRating, Rating, Skill, Team, User
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -38,4 +38,11 @@ class RatingViewSet(viewsets.ModelViewSet):
     queryset = Rating.objects.all()
 #    lookup_field = 'user'
     serializer_class = RaitingSerializer
+    http_method_names = ['get',]
+
+
+class LastRatingViewSet(viewsets.ModelViewSet):
+    queryset = LastRating.objects.all()
+#    lookup_field = 'user'
+    serializer_class = LastRatingSerializer
     http_method_names = ['get',]

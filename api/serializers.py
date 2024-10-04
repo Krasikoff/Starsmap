@@ -1,16 +1,14 @@
-from django.conf import settings
-from django.core.validators import MaxValueValidator, MinValueValidator
-from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
-from employee.models import User, Team, Position, Skill, Competence, Rating, LastDateMatch
+from employee.models import (Competence, LastRating, Position, Rating, Skill,
+                             Team, User)
 
 
 class TeamSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Team
-        fields = '__all__'
+        fields = 'name', 'leader'
 
 
 class PositionSerializer(serializers.ModelSerializer):
@@ -26,44 +24,43 @@ class CompetenceSerializer(serializers.ModelSerializer):
         model = Competence
         fields = '__all__'
 
+
 class SkillSerializer(serializers.ModelSerializer):
     competence = serializers.StringRelatedField(read_only=True)
-    
+
     class Meta:
         model = Skill
         fields = 'name', 'domain', 'competence'
 
 
-class LastDateSerializer(serializers.ModelSerializer):
-#    last_date_match = serializers.CharField(source="LastDateSerializer.match")
-    
-    class Meta:
-        model = LastDateMatch
-#        fields = 'last_date_match', 'date_last_score'
-        fields = 'match', 'date_last_score'
-
 class RaitingSerializer(serializers.ModelSerializer):
-    skill = SkillSerializer(read_only=True)
-    last_date = LastDateSerializer(read_only=True)
 
     class Meta:
         model = Rating
         fields = (
-            'skill', 'score', 'date_score', 'need_to_study',
-            'date', 'date_start', 'date_end', 'match', 'chief_proof', 'last_date',
+            'score', 'date_score', 'need_to_study',
+            'date_need', 'date_start', 'date_end', 'match', 'chief_proof',
         )
+
+
+class LastRatingSerializer(serializers.ModelSerializer):
+    rating = RaitingSerializer(read_only=True, many=True)
+    skill = SkillSerializer(read_only=True,)
+
+    class Meta:
+        model = LastRating
+        fields = 'skill', 'last_match', 'last_date', 'rating'
 
 
 class UserSerializer(serializers.ModelSerializer):
     position = serializers.StringRelatedField(read_only=True)
-    rating = RaitingSerializer(many=True, read_only=True)
-    
+    lastrating = LastRatingSerializer(many=True, read_only=True)
+    team = TeamSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
         fields = (
-            'first_name', 'last_name', 'date_hire', 'date_fire',
+            'first_name', 'last_name', 'date_hire', 'date_fire', 'team',
             'position', 'grade', 'role', 'key_people', 'bus_factor', 'emi',
-            'rating',
+            'lastrating',
         )
-

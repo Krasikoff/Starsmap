@@ -1,7 +1,9 @@
-from django.db import models
-from django.contrib.auth.models import AbstractUser
 import datetime
-from employee.constants import RATING, GRADE, DOMAIN, ROLE_CHOICES, USER
+
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+
+from employee.constants import DOMAIN, GRADE, RATING, ROLE_CHOICES, USER
 
 
 class Position(models.Model):
@@ -21,6 +23,7 @@ class Position(models.Model):
 class Team(models.Model):
     """Таблица команд."""
     name = models.CharField(max_length=250)
+    leader = models.CharField(max_length=250, blank=True, null=True)
 
     class Meta:
         ordering = ['name']
@@ -57,7 +60,7 @@ class Skill(models.Model):
         related_name='skill',
         null=True,
         blank=False,
-        )
+    )
 
     class Meta:
         ordering = ['name']
@@ -109,95 +112,68 @@ class User(AbstractUser):
         )
 
 
-class Rating(models.Model):
-    """Таблица оценок навыков, компетенций."""
+class LastRating(models.Model):
+    """Таблица дата последней оценки и соответствие навыка
 
+    по сотруднику и навыку. Является связкой для временных рейтингов
+    и user.
+    """
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='rating',
+        related_name='lastrating',
         verbose_name='Сотрудник',
     )
     skill = models.ForeignKey(
         Skill,
         verbose_name='Навык',
         on_delete=models.SET_NULL,
-        related_name='rating',
+        related_name='lastrating',
         null=True,
         blank=False,
     )
-    competence = models.ForeignKey(
-        Competence,
-        verbose_name='Компетенция',
-        on_delete=models.SET_NULL,
-        related_name='rating',
-        null=True,
-        blank=False,
-    )
-    score = models.IntegerField(choices=RATING, default=RATING[0])
-    date_score = models.DateField(default=datetime.datetime.now)
-    need_to_study = models.BooleanField(default=False)
-    date = models.DateField(default=datetime.datetime.now)
-    date_start = models.DateField(default=datetime.datetime.now)
-    date_end = models.DateField(default=datetime.datetime.now)
-    match = models.BooleanField(default=False)
-    chief_proof = models.BooleanField(default=False)
+    last_match = models.BooleanField(default=False)
+    last_date = models.DateField(default=datetime.datetime.now)
 
     class Meta:
         ordering = ['user', 'skill',]
-        verbose_name = 'Рейтинг'
-        verbose_name_plural = 'Рейтинги'
-
-    def __str__(self):
-        return (
-            f'оценка {self.user.last_name} {self.user.first_name} по '
-            f'{self.skill.name} {self.competence.name} на '
-            f'{self.date.strftime("%d.%m.%Y")} -- {self.score}!'
-        )
-
-
-class LastDateMatch(models.Model):
-    """Таблица дата последней оценки и соответствие навыка по сотруднику и навыку.
-    
-    ее можно или развить как статическую таблицу, или убрать и перенести данные в raiting.
-    """     
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='lastdatematch',
-        verbose_name='Сотрудник',
-    )
-    skill = models.ForeignKey(
-        Skill,
-        verbose_name='Навык',
-        on_delete=models.SET_NULL,
-        related_name='lastdatematch',
-        null=True,
-        blank=False,
-    )
-    competence = models.ForeignKey(
-        Competence,
-        verbose_name='Компетенция',
-        on_delete=models.SET_NULL,
-        related_name='lastdatematch',
-        null=True,
-        blank=False,
-    )
-    match = models.BooleanField(default=False)
-    date_last_score = models.DateField(default=datetime.datetime.now)
-
-    class Meta:
-        ordering = ['user', 'skill', 'date_last_score']
         verbose_name = 'Соответствие на последнюю дату'
         verbose_name_plural = 'Соответствия на последнюю дату'
 
     def __str__(self):
         return (
-            f'{self.user.last_name} {self.user.first_name} '
-            f'{self.skill.name} {self.competence.name} на '
-            f'{self.date_last_score.strftime("%d.%m.%Y")} -- {self.match}!'
+            f'{self.user.username}, '
+            f'{self.skill.name} - {self.last_match},'
         )
 
+
+class Rating(models.Model):
+    """Таблица оценок навыков, компетенций."""
+    last_rating = models.ForeignKey(
+        LastRating,
+        on_delete=models.CASCADE,
+        related_name='rating',
+        verbose_name='Последняя оценка',
+    )
+    score = models.IntegerField(choices=RATING, default=RATING[0])
+    date_score = models.DateField(default=datetime.datetime.now)
+    match = models.BooleanField(default=False)
+    chief_proof = models.BooleanField(default=False)
+    need_to_study = models.BooleanField(default=False)
+    date_need = models.DateField(default=datetime.datetime.now)
+    date_start = models.DateField(default=datetime.datetime.now)
+    date_end = models.DateField(default=datetime.datetime.now)
+
+    class Meta:
+        ordering = ['last_rating',]
+        verbose_name = 'Рейтинг'
+        verbose_name_plural = 'Рейтинги'
+
+    def __str__(self):
+        return (
+            f'оценка по навыку {self.last_rating} на '
+            f'{self.date_score.strftime("%d.%m.%Y")} -- {self.score}!'
+        )
 
 
 class Vacancy(models.Model):
@@ -232,7 +208,7 @@ class Vacancy(models.Model):
 
 class Candidate(models.Model):
     """Линки на HH.RU привязанные к вакансии (должности)."""
-    
+
     vacancy = models.ForeignKey(
         Vacancy,
         related_name='condidate',
