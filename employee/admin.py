@@ -12,12 +12,16 @@ admin.site.register(Position)
 
 
 class LeaderInline(admin.TabularInline):
+    """Инлайн добавка лидера для админ страницы команды"""
+
     model = LeaderInTeam
     extra = 0
 
 
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
+    """Регистрация админ. страницы команды"""
+
     inlines = (
         LeaderInline,
     )
@@ -25,16 +29,22 @@ class TeamAdmin(admin.ModelAdmin):
 
 @admin.register(Skill)
 class SkillAdmin(admin.ModelAdmin):
+    """Регистрация админ. страницы навыков"""
+
     list_filter = ['domain', 'competence',]
 
 
 class RatingInline(admin.TabularInline):
+    """Инлайн добавка оценок на дату для админ страницы рейтингов"""
+
     model = Rating
     extra = 1
 
 
 @admin.register(LastRating)
 class LastRatingAdmin(admin.ModelAdmin):
+    """Регистрация админ. страницы оценок"""
+
     inlines = (
         RatingInline,
     )
@@ -46,6 +56,8 @@ class LastRatingAdmin(admin.ModelAdmin):
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
+    """Регистрация админ. страницы сотрудников"""
+
     filter_horizontal = ('groups', 'user_permissions', 'team')
     list_display = (
         'last_name', 'first_name', 'position', 'grade',
@@ -54,12 +66,15 @@ class UserAdmin(admin.ModelAdmin):
 
 
 class CandidateInline(admin.TabularInline):
+    """Инлайн добавка кандидатов для админ страницы вакансий"""
+
     model = Candidate
     extra = 1
 
 
 @admin.register(Vacancy)
 class VacancyAdmin(admin.ModelAdmin):
+    """Регистрация админ. страницы вакансий."""
     inlines = (
         CandidateInline,
     )

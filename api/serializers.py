@@ -5,6 +5,8 @@ from employee.models import (Competence, LastRating, Position,
 
 
 class TeamSerializer(serializers.ModelSerializer):
+    """Сериалайзер модели"""
+
     leader = serializers.CharField(source='leaderinteam.leader')
 
     class Meta:
@@ -13,6 +15,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
 
 class PositionSerializer(serializers.ModelSerializer):
+    """Сериалайзер модели"""
 
     class Meta:
         model = Position
@@ -20,6 +23,7 @@ class PositionSerializer(serializers.ModelSerializer):
 
 
 class CompetenceSerializer(serializers.ModelSerializer):
+    """Сериалайзер модели"""
 
     class Meta:
         model = Competence
@@ -27,6 +31,8 @@ class CompetenceSerializer(serializers.ModelSerializer):
 
 
 class SkillSerializer(serializers.ModelSerializer):
+    """Сериалайзер модели"""
+
     competence = serializers.StringRelatedField(read_only=True)
 
     class Meta:
@@ -35,6 +41,7 @@ class SkillSerializer(serializers.ModelSerializer):
 
 
 class RaitingSerializer(serializers.ModelSerializer):
+    """Сериалайзер модели"""
 
     class Meta:
         model = Rating
@@ -45,6 +52,8 @@ class RaitingSerializer(serializers.ModelSerializer):
 
 
 class LastRatingSerializer(serializers.ModelSerializer):
+    """Сериалайзер модели"""
+
     rating = RaitingSerializer(read_only=True, many=True)
     skill = SkillSerializer(read_only=True,)
 
@@ -54,6 +63,8 @@ class LastRatingSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    """Сериалайзер модели"""
+
     position = serializers.StringRelatedField(read_only=True)
     lastrating = LastRatingSerializer(many=True, read_only=True)
     team = TeamSerializer(many=True, read_only=True)
