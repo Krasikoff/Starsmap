@@ -23,7 +23,6 @@ class Position(models.Model):
 class Team(models.Model):
     """Таблица команд."""
     name = models.CharField(max_length=250)
-    leader = models.CharField(max_length=250, blank=True, null=True)
 
     class Meta:
         ordering = ['name']
@@ -69,7 +68,7 @@ class Skill(models.Model):
 
     def __str__(self):
         return (
-            f'{self.name[:20]}...' 
+            f'{self.name[:20]}...'
             if len(self.name) > 20 else
             f'{self.name[:20]}'
         )
@@ -224,3 +223,28 @@ class Candidate(models.Model):
 
     def __str__(self):
         return (self.link)
+
+
+class LeaderInTeam(models.Model):
+    team = models.OneToOneField(
+        Team,
+        on_delete=models.CASCADE,
+        related_name='leaderinteam',
+    )
+    leader = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='leaderinteam',
+        blank=True,
+        null=True
+    )
+
+    class Meta:
+        ordering = ['team']
+        verbose_name = 'Лидер'
+        verbose_name_plural = 'Лидеры'
+
+    def __str__(self):
+        return (
+            f'{self.leader}'
+        )

@@ -1,10 +1,11 @@
 from rest_framework import serializers
 
-from employee.models import (Competence, LastRating, Position, Rating, Skill,
-                             Team, User)
+from employee.models import (Competence, LastRating, Position,
+                             Rating, Skill, Team, User)
 
 
 class TeamSerializer(serializers.ModelSerializer):
+    leader = serializers.CharField(source='leaderinteam.leader')
 
     class Meta:
         model = Team

@@ -2,6 +2,8 @@
 2. Если не указывать специально доп. таблицу связи для many-to-many, django сделает это автоматом.
 В этой схеме у нас пока одна team-user.
 3. Все таблицы описаны для django в классами в employee.models.
+4. Добавил таблицу leaderinteem, где можно выбрать лидера команды.
+5. Между user и rating вставил таблицу lastrating(содержит данные на последнюю дату). 
 
 ===================
 Position:
@@ -36,28 +38,32 @@ position ForeignKey(Position,)
 team ManyToManyField(Team,)
 role CharField(choices=ROLE_CHOICES,)
 --------------------
-Rating:
-"""Таблица оценок навыков, компетенций - временная таблица."""
-user ForeignKey(User,)
-skill ForeignKey(Skill,)
-competence ForeignKey(Competence,)
-need_to_study BooleanField
-score IntegerField(choices=RATING,)
-date_score DateField
-date_demand DateField
-date_start DateField
-date_end DateField
-match BooleanField
-chief_proof BooleanField
--------------------------
-LastDateMatch:
+LeaderInTeam:
+team OneToOneField(Team,)
+leader ForeignKey(User,)
+--------------------
+LastRating:
 """Таблица дата последней оценки и соответствие навыка по сотруднику и навыку.
 ее можно или развить как статическую таблицу, или убрать и перенести данные в raiting."""     
 user ForeignKey(User,)
 skill ForeignKey(Skill,)
 competence ForeignKey(Competence,)
+last_match BooleanField
+last_date DateField
+--------------------
+Rating:
+"""Таблица оценок навыков, компетенций - временная таблица."""
+user ForeignKey(User,)
+skill ForeignKey(Skill,)
+competence ForeignKey(Competence,)
+score IntegerField(choices=RATING,)
+date_score DateField
 match BooleanField
-date_last_score DateField
+chief_proof BooleanField
+need_to_study BooleanField
+date_need DateField
+date_start DateField
+date_end DateField
 ----------------------------
 Vacancy:
 """Таблица вакансий (требуемых должностей)"""

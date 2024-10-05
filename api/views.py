@@ -1,9 +1,11 @@
 # from django.shortcuts import render
 from rest_framework import viewsets
 
-from api.serializers import (LastRatingSerializer, RaitingSerializer,
-                             SkillSerializer, TeamSerializer, UserSerializer)
-from employee.models import Competence, LastRating, Rating, Skill, Team, User
+from api.serializers import (CompetenceSerializer, LastRatingSerializer,
+                             RaitingSerializer, SkillSerializer,
+                             TeamSerializer, UserSerializer)
+from employee.models import (Competence, LastRating, Rating,
+                             Skill, Team, User)
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -24,7 +26,7 @@ class TeamViewSet(viewsets.ModelViewSet):
 
 class CompetenceViewSet(viewsets.ModelViewSet):
     queryset = Competence.objects.all()
-    serializer_class = TeamSerializer
+    serializer_class = CompetenceSerializer
     http_method_names = ['get',]
 
 
@@ -36,13 +38,11 @@ class SkillViewSet(viewsets.ModelViewSet):
 
 class RatingViewSet(viewsets.ModelViewSet):
     queryset = Rating.objects.all()
-#    lookup_field = 'user'
     serializer_class = RaitingSerializer
     http_method_names = ['get',]
 
 
 class LastRatingViewSet(viewsets.ModelViewSet):
     queryset = LastRating.objects.all()
-#    lookup_field = 'user'
     serializer_class = LastRatingSerializer
     http_method_names = ['get',]

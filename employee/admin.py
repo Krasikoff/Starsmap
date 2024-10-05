@@ -1,14 +1,26 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 
-from .models import (Candidate, Competence, LastRating, Position, Rating,
-                     Skill, Team, Vacancy)
+from .models import (Candidate, Competence, LastRating, LeaderInTeam, Position,
+                     Rating, Skill, Team, Vacancy)
 
 User = get_user_model()
 
-admin.site.register(Team)
+
 admin.site.register(Competence)
 admin.site.register(Position)
+
+
+class LeaderInline(admin.TabularInline):
+    model = LeaderInTeam
+    extra = 0
+
+
+@admin.register(Team)
+class TeamAdmin(admin.ModelAdmin):
+    inlines = (
+        LeaderInline,
+    )
 
 
 @admin.register(Skill)
