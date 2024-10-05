@@ -68,7 +68,11 @@ class Skill(models.Model):
         verbose_name_plural = 'Навыки'
 
     def __str__(self):
-        return self.name
+        return (
+            f'{self.name[:20]}...' 
+            if len(self.name) > 20 else
+            f'{self.name[:20]}'
+        )
 
 
 class User(AbstractUser):
@@ -107,8 +111,7 @@ class User(AbstractUser):
 
     def __str__(self):
         return (
-            f'{self.last_name} {self.first_name} {self.position} '
-            f'{self.grade} {self.role} нанят {self.date_hire}'
+            f'{self.username}'
         )
 
 
@@ -137,14 +140,11 @@ class LastRating(models.Model):
 
     class Meta:
         ordering = ['user', 'skill',]
-        verbose_name = 'Соответствие на последнюю дату'
-        verbose_name_plural = 'Соответствия на последнюю дату'
+        verbose_name = 'Оценка навыков'
+        verbose_name_plural = 'Оценки навыков'
 
     def __str__(self):
-        return (
-            f'{self.user.username}, '
-            f'{self.skill.name} - {self.last_match},'
-        )
+        return (f'{self.last_match},')
 
 
 class Rating(models.Model):

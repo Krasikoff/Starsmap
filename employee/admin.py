@@ -16,29 +16,42 @@ class SkillAdmin(admin.ModelAdmin):
     list_filter = ['domain', 'competence',]
 
 
-@admin.register(Rating)
-class RaitingAdmin(admin.ModelAdmin):
-    list_filter = ['last_rating',]
+class RatingInline(admin.TabularInline):
+    model = Rating
+    extra = 1
 
 
 @admin.register(LastRating)
 class LastRatingAdmin(admin.ModelAdmin):
-    list_filter = ['user', 'skill',]
+    inlines = (
+        RatingInline,
+    )
+    list_display = (
+        'user', 'skill', 'last_match', 'last_date',
+    )
+    list_filter = ['user', 'skill', 'last_match', 'last_date']
 
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
+    filter_horizontal = ('groups', 'user_permissions', 'team')
+    list_display = (
+        'last_name', 'first_name', 'position', 'grade',
+    )
     list_filter = ['team', 'grade', 'position']
+
+
+class CandidateInline(admin.TabularInline):
+    model = Candidate
+    extra = 1
 
 
 @admin.register(Vacancy)
 class VacancyAdmin(admin.ModelAdmin):
+    inlines = (
+        CandidateInline,
+    )
     list_filter = ['position',]
-
-
-@admin.register(Candidate)
-class CandidateAdmin(admin.ModelAdmin):
-    list_filter = ['link',]
 
 
 admin.site.empty_value_display = 'Не задано'
