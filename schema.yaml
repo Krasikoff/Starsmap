@@ -1,0 +1,451 @@
+openapi: 3.0.2
+info:
+  title: ''
+  version: ''
+paths:
+  /api/v1/team/:
+    get:
+      operationId: listTeams
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Team'
+          description: ''
+      tags:
+      - api
+  /api/v1/team/{id}/:
+    get:
+      operationId: retrieveTeam
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: "A unique integer value identifying this \u041A\u043E\u043C\u0430\
+          \u043D\u0434\u0430."
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+          description: ''
+      tags:
+      - api
+  /api/v1/competence/:
+    get:
+      operationId: listCompetences
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Team'
+          description: ''
+      tags:
+      - api
+  /api/v1/competence/{id}/:
+    get:
+      operationId: retrieveCompetence
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: "A unique integer value identifying this \u041A\u043E\u043C\u043F\
+          \u0435\u0442\u0435\u043D\u0446\u0438\u044F."
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+          description: ''
+      tags:
+      - api
+  /api/v1/skill/:
+    get:
+      operationId: listSkills
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Skill'
+          description: ''
+      tags:
+      - api
+  /api/v1/skill/{id}/:
+    get:
+      operationId: retrieveSkill
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: "A unique integer value identifying this \u041D\u0430\u0432\u044B\
+          \u043A."
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Skill'
+          description: ''
+      tags:
+      - api
+  /api/v1/rating/:
+    get:
+      operationId: listRatings
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Raiting'
+          description: ''
+      tags:
+      - api
+  /api/v1/rating/{id}/:
+    get:
+      operationId: retrieveRating
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: "A unique integer value identifying this \u0420\u0435\u0439\u0442\
+          \u0438\u043D\u0433."
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Raiting'
+          description: ''
+      tags:
+      - api
+  /api/v1/lastrating/:
+    get:
+      operationId: listLastRatings
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LastRating'
+          description: ''
+      tags:
+      - api
+  /api/v1/lastrating/{id}/:
+    get:
+      operationId: retrieveLastRating
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: "A unique integer value identifying this \u0421\u043E\u043E\u0442\
+          \u0432\u0435\u0442\u0441\u0442\u0432\u0438\u0435 \u043D\u0430 \u043F\u043E\
+          \u0441\u043B\u0435\u0434\u043D\u044E\u044E \u0434\u0430\u0442\u0443."
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LastRating'
+          description: ''
+      tags:
+      - api
+  /api/v1/users/:
+    get:
+      operationId: listUsers
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+          description: ''
+      tags:
+      - api
+  /api/v1/users/{id}/:
+    get:
+      operationId: retrieveUser
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: "A unique integer value identifying this \u0421\u043E\u0442\u0440\
+          \u0443\u0434\u043D\u0438\u043A."
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+      tags:
+      - api
+components:
+  schemas:
+    Team:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 250
+      required:
+      - name
+    Skill:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 250
+        domain:
+          enum:
+          - Hard skills
+          - Soft skills
+          type: string
+        competence:
+          type: string
+          readOnly: true
+      required:
+      - name
+      - domain
+    Raiting:
+      type: object
+      properties:
+        score:
+          enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          type: integer
+        date_score:
+          type: string
+          format: date
+        need_to_study:
+          type: boolean
+        date_need:
+          type: string
+          format: date
+        date_start:
+          type: string
+          format: date
+        date_end:
+          type: string
+          format: date
+        match:
+          type: boolean
+        chief_proof:
+          type: boolean
+    LastRating:
+      type: object
+      properties:
+        skill:
+          type: object
+          properties:
+            name:
+              type: string
+              maxLength: 250
+            domain:
+              enum:
+              - Hard skills
+              - Soft skills
+              type: string
+            competence:
+              type: string
+              readOnly: true
+          required:
+          - name
+          - domain
+          readOnly: true
+        last_match:
+          type: boolean
+        last_date:
+          type: string
+          format: date
+        rating:
+          type: array
+          items:
+            type: object
+            properties:
+              score:
+                enum:
+                - 0
+                - 1
+                - 2
+                - 3
+                - 4
+                - 5
+                type: integer
+              date_score:
+                type: string
+                format: date
+              need_to_study:
+                type: boolean
+              date_need:
+                type: string
+                format: date
+              date_start:
+                type: string
+                format: date
+              date_end:
+                type: string
+                format: date
+              match:
+                type: boolean
+              chief_proof:
+                type: boolean
+          readOnly: true
+    User:
+      type: object
+      properties:
+        first_name:
+          type: string
+          maxLength: 250
+        last_name:
+          type: string
+          maxLength: 250
+        date_hire:
+          type: string
+          format: date
+        date_fire:
+          type: string
+          format: date
+          nullable: true
+        position:
+          type: string
+          readOnly: true
+        grade:
+          enum:
+          - No value
+          - Junior
+          - Middle
+          - Senior
+          type: string
+        role:
+          enum:
+          - admin
+          - hr
+          - team_chief
+          - user
+          type: string
+        key_people:
+          type: boolean
+        bus_factor:
+          type: boolean
+        emi:
+          type: number
+        lastrating:
+          type: array
+          items:
+            type: object
+            properties:
+              skill:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    maxLength: 250
+                  domain:
+                    enum:
+                    - Hard skills
+                    - Soft skills
+                    type: string
+                  competence:
+                    type: string
+                    readOnly: true
+                required:
+                - name
+                - domain
+                readOnly: true
+              last_match:
+                type: boolean
+              last_date:
+                type: string
+                format: date
+              rating:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    score:
+                      enum:
+                      - 0
+                      - 1
+                      - 2
+                      - 3
+                      - 4
+                      - 5
+                      type: integer
+                    date_score:
+                      type: string
+                      format: date
+                    need_to_study:
+                      type: boolean
+                    date_need:
+                      type: string
+                      format: date
+                    date_start:
+                      type: string
+                      format: date
+                    date_end:
+                      type: string
+                      format: date
+                    match:
+                      type: boolean
+                    chief_proof:
+                      type: boolean
+                readOnly: true
+          readOnly: true
+      required:
+      - first_name
+      - last_name

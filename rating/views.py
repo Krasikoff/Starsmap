@@ -1,14 +1,12 @@
 from datetime import datetime
-from django.shortcuts import(
-    get_list_or_404, get_object_or_404, render
-)
+
 from django.contrib.auth import get_user_model
 from django.db.models import Q
+from django.shortcuts import get_list_or_404, get_object_or_404, render
+
 from employee.models import Rating
 
 User = get_user_model()
-
-
 
 
 def rating_detail(request, pk):
@@ -22,7 +20,7 @@ def rating_detail(request, pk):
     rating_lines = get_list_or_404(Rating.objects.filter(
         Q(fio=pk) &
         Q(updated__gt=start_date) & Q(updated__lt=end_date)
-        )
+    )
     )
     template = 'rating/detail.html'
     context = {'rating_lines': rating_lines, 'employee': employee}
