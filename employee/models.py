@@ -9,7 +9,7 @@ from employee.constants import DOMAIN, GRADE, RATING, ROLE_CHOICES, USER
 class Position(models.Model):
     """Таблица должностей."""
 
-    name = models.CharField(max_length=250)
+    name = models.CharField(max_length=250, verbose_name='Наименование')
 
     class Meta:
         ordering = ['name']
@@ -22,7 +22,7 @@ class Position(models.Model):
 
 class Team(models.Model):
     """Таблица команд."""
-    name = models.CharField(max_length=250)
+    name = models.CharField(max_length=250, verbose_name='Наименование')
 
     class Meta:
         ordering = ['name']
@@ -36,7 +36,7 @@ class Team(models.Model):
 class Competence(models.Model):
     """Таблица компетенций."""
 
-    name = models.CharField(max_length=250)
+    name = models.CharField(max_length=250, verbose_name='Наименование')
 
     class Meta:
         ordering = ['name']
@@ -50,8 +50,9 @@ class Competence(models.Model):
 class Skill(models.Model):
     """Таблица навыков."""
 
-    name = models.CharField(max_length=250)
-    domain = models.CharField(max_length=12, choices=DOMAIN)
+    name = models.CharField(max_length=250, verbose_name='Наименование')
+    domain = models.CharField(
+        max_length=12, choices=DOMAIN, verbose_name='Домен')
     competence = models.ForeignKey(
         Competence,
         verbose_name='Компетенция',
@@ -77,14 +78,17 @@ class Skill(models.Model):
 class User(AbstractUser):
     """Таблица сотрудников."""
 
-    first_name = models.CharField(max_length=250)
-    last_name = models.CharField(max_length=250)
-    date_hire = models.DateField(default=datetime.datetime.now)
-    date_fire = models.DateField(blank=True, null=True)
-    grade = models.CharField(max_length=8, choices=GRADE, default=GRADE[0])
-    key_people = models.BooleanField(default=False)
-    bus_factor = models.BooleanField(default=False)
-    emi = models.FloatField(default=0.0)
+    first_name = models.CharField(max_length=250, verbose_name='Имя')
+    last_name = models.CharField(max_length=250, verbose_name='Фамилия')
+    date_hire = models.DateField(
+        default=datetime.datetime.now, verbose_name='Принят'
+    )
+    date_fire = models.DateField(blank=True, null=True, verbose_name='Уволен')
+    grade = models.CharField(
+        max_length=8, choices=GRADE, default=GRADE[0], verbose_name='Уровень')
+    key_people = models.BooleanField(default=False,)
+    bus_factor = models.BooleanField(default=False,)
+    emi = models.FloatField(default=0.0,)
     position = models.ForeignKey(
         Position,
         verbose_name='Должность',
@@ -101,6 +105,7 @@ class User(AbstractUser):
         max_length=max(len(role) for role, _ in ROLE_CHOICES),
         choices=ROLE_CHOICES,
         default=USER,
+        verbose_name='Роль'
     )
 
     class Meta:
@@ -134,8 +139,12 @@ class LastRating(models.Model):
         null=True,
         blank=False,
     )
-    last_match = models.BooleanField(default=False)
-    last_date = models.DateField(default=datetime.datetime.now)
+    last_match = models.BooleanField(
+        default=False, verbose_name='Соответствие на последнюю дату'
+    )
+    last_date = models.DateField(
+        default=datetime.datetime.now, verbose_name='Дата последней оценки'
+    )
 
     class Meta:
         ordering = ['user', 'skill',]
@@ -154,17 +163,30 @@ class Rating(models.Model):
         related_name='rating',
         verbose_name='Последняя оценка',
     )
-    score = models.IntegerField(choices=RATING, default=RATING[0])
-    date_score = models.DateField(default=datetime.datetime.now)
-    match = models.BooleanField(default=False)
-    chief_proof = models.BooleanField(default=False)
-    need_to_study = models.BooleanField(default=False)
-    date_need = models.DateField(default=datetime.datetime.now)
-    date_start = models.DateField(default=datetime.datetime.now)
-    date_end = models.DateField(default=datetime.datetime.now)
+    score = models.IntegerField(
+        choices=RATING, default=RATING[0], verbose_name='Оценка'
+    )
+    date_score = models.DateField(
+        default=datetime.datetime.now, verbose_name='Дата оценки'
+    )
+    match = models.BooleanField(default=False, verbose_name='Соответствие')
+    chief_proof = models.BooleanField(
+        default=False, verbose_name='Навык подтвержден руководителем')
+    need_to_study = models.BooleanField(
+        default=False, verbose_name='Требуется обучение'
+    )
+    date_need = models.DateField(
+        default=datetime.datetime.now, verbose_name='Дата запроса обучения'
+    )
+    date_start = models.DateField(
+        default=datetime.datetime.now, verbose_name='Дата начала обучения'
+    )
+    date_end = models.DateField(
+        default=datetime.datetime.now, verbose_name='Дата окончания обучения'
+    )
 
     class Meta:
-        ordering = ['last_rating',]
+        ordering = ['last_rating', '-date_score']
         verbose_name = 'Рейтинг'
         verbose_name_plural = 'Рейтинги'
 
@@ -178,7 +200,7 @@ class Rating(models.Model):
 class Vacancy(models.Model):
     """Таблица вакансий (требуемых должностей)"""
 
-    closed = models.BooleanField(default=False)
+    closed = models.BooleanField(default=False, verbose_name='Вакансия закрыта')
     position = models.ForeignKey(
         Position,
         verbose_name='Должность',
@@ -210,11 +232,11 @@ class Candidate(models.Model):
 
     vacancy = models.ForeignKey(
         Vacancy,
-        related_name='condidate',
+        related_name='candidate',
         verbose_name='Вакансия',
         on_delete=models.CASCADE,
     )
-    link = models.URLField(blank=True, null=True)
+    link = models.URLField(blank=True, null=True, verbose_name='Ссылка')
 
     class Meta:
         ordering = ['link',]
@@ -230,13 +252,15 @@ class LeaderInTeam(models.Model):
         Team,
         on_delete=models.CASCADE,
         related_name='leaderinteam',
+        verbose_name='Команда'
     )
     leader = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='leaderinteam',
         blank=True,
-        null=True
+        null=True,
+        verbose_name='Лидер'
     )
 
     class Meta:
