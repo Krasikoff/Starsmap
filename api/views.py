@@ -4,7 +4,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from api.serializers import (
     CompetenceSerializer, LastRatingSerializer, RaitingSerializer,
     SkillSerializer, TeamSerializer, UserSerializer, VacancySerializer,
-    CandidateSerializer,
+    CandidateSerializer, TeamMemberSerializer,
 )
 from employee.models import (
     Competence, LastRating, Rating, Skill, Team, User, Vacancy, Candidate,
@@ -12,30 +12,50 @@ from employee.models import (
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
-    """Вьюсет модели"""
+    """Вьюсет модели
+    
+    http://localhost:8000/api/v1/user/?first_name=Роберт&last_name=Акимов
+    """
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
-#    lookup_field = 'id'
 #    permission_classes = (IsAdmin, )
     filter_backends = (filters.SearchFilter, )
     filter_backends = (DjangoFilterBackend,)
-    search_fields = ('id', )
-    filterset_fields = ('username',)
+    search_fields = ('id',)
+    filterset_fields = ('username', 'first_name', 'last_name')
 
 
-class TeamViewSet(viewsets.ModelViewSet):
-    """Вьюсет модели"""
+class TeamViewSet(viewsets.ReadOnlyModelViewSet):
+    """Вьюсет модели
+    
+    http://localhost:8000/api/v1/team/?name=Медиа
+    """
 
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
     filter_backends = (filters.SearchFilter, )
     filter_backends = (DjangoFilterBackend,)
     search_fields = ('id', )
-    filterset_fields = ('name', 'leader')
+    filterset_fields = ('name',)
 
 
-class CompetenceViewSet(viewsets.ModelViewSet):
+class TeamMemberViewSet(viewsets.ReadOnlyModelViewSet):
+    """Вьюсет модели
+    
+    http://localhost:8000/api/v1/team/?name=Медиа
+    """
+
+    queryset = Team.objects.all()
+    serializer_class = TeamMemberSerializer
+    filter_backends = (filters.SearchFilter,)
+    filter_backends = (DjangoFilterBackend,)
+    search_fields = ('id', )
+    filterset_fields = ('name',)
+
+
+
+class CompetenceViewSet(viewsets.ReadOnlyModelViewSet):
     """Вьюсет модели"""
 
     queryset = Competence.objects.all()
@@ -46,7 +66,7 @@ class CompetenceViewSet(viewsets.ModelViewSet):
     filterset_fields = ('name',)
 
 
-class SkillViewSet(viewsets.ModelViewSet):
+class SkillViewSet(viewsets.ReadOnlyModelViewSet):
     """Вьюсет модели"""
 
     queryset = Skill.objects.all()
@@ -57,20 +77,19 @@ class SkillViewSet(viewsets.ModelViewSet):
     filterset_fields = ('name', 'domain')
 
 
-class RatingViewSet(viewsets.ModelViewSet):
+class RatingViewSet(viewsets.ReadOnlyModelViewSet):
     """Вьюсет модели"""
 
     queryset = Rating.objects.all()
     serializer_class = RaitingSerializer
-    http_method_names = ['get',]
+#    http_method_names = ['get',]
 
 
-class LastRatingViewSet(viewsets.ModelViewSet):
+class LastRatingViewSet(viewsets.ReadOnlyModelViewSet):
     """Вьюсет модели"""
 
     queryset = LastRating.objects.all()
     serializer_class = LastRatingSerializer
-    http_method_names = ['get',]
 
 
 class CandidateViewSet(viewsets.ReadOnlyModelViewSet):

@@ -100,6 +100,7 @@ class User(AbstractUser):
     team = models.ManyToManyField(
         Team,
         verbose_name='Команда',
+        related_name='user',
     )
     role = models.CharField(
         max_length=max(len(role) for role, _ in ROLE_CHOICES),
@@ -192,8 +193,9 @@ class Rating(models.Model):
 
     def __str__(self):
         return (
-            f'оценка по навыку {self.last_rating} на '
-            f'{self.date_score.strftime("%d.%m.%Y")} -- {self.score}!'
+            f'оценка {self.last_rating.user} '
+            f'на {self.date_score.strftime("%d.%m.%Y")} - {self.score} по навыку '
+            f'{self.last_rating.skill}'
         )
 
 
@@ -236,7 +238,7 @@ class Candidate(models.Model):
         verbose_name='Вакансия',
         on_delete=models.CASCADE,
     )
-    link = models.URLField(blank=True, null=True, verbose_name='Ссылка')
+    link = models.URLField(blank=True, null=True, verbose_name='Ссылка', unique=True)
 
     class Meta:
         ordering = ['link',]

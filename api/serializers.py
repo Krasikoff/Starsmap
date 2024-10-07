@@ -13,7 +13,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Team
-        fields = 'name', 'leader'
+        fields = 'name', 'leader',
 
 
 class PositionSerializer(serializers.ModelSerializer):
@@ -97,3 +97,42 @@ class VacancySerializer(serializers.ModelSerializer):
     class Meta:
         model = Vacancy
         fields = 'position', 'team', 'closed', 'candidate',
+
+
+class UserInTeamSerializer(serializers.ModelSerializer):
+    """Сериалайзер модели."""
+    position = serializers.StringRelatedField(read_only=True)
+    
+    class Meta:
+        model = User
+        fields = 'id', 'last_name', 'first_name', 'position',
+
+
+class VacancyInTeamSerializer(serializers.ModelSerializer):
+    """Сериалайзер модели."""
+    position = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = Vacancy
+        fields = 'id', 'position', 'closed',
+
+
+
+class TeamMemberSerializer(serializers.ModelSerializer):
+    """Сериалайзер модели.
+    
+    UserInTeamSerializer -> UserSerializer
+    VacancyInTeamSerializer -> VacancySerializer
+    """
+    user = UserInTeamSerializer(many=True, read_only=True)
+    vacancy = VacancyInTeamSerializer(many=True, read_only=True)
+    leader = serializers.CharField(source='leaderinteam.leader')
+
+    class Meta:
+        model = Team
+        fields = (
+            'name', 
+            'leader', 
+            'user',
+            'vacancy',
+        )

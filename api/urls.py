@@ -3,11 +3,12 @@ from rest_framework.routers import DefaultRouter
 
 from api.views import (
     CompetenceViewSet, LastRatingViewSet, RatingViewSet, SkillViewSet,
-    TeamViewSet, UserViewSet, VacancyViewSet, CandidateViewSet,
+    TeamViewSet, UserViewSet, VacancyViewSet, CandidateViewSet, TeamMemberViewSet
 )
 
 router_v1 = DefaultRouter()
 router_v1.register('team', TeamViewSet, basename='team')
+router_v1.register('teammember', TeamMemberViewSet, basename='teammember')
 router_v1.register('competence', CompetenceViewSet, basename='competence')
 router_v1.register('skill', SkillViewSet, basename='skill')
 router_v1.register('rating', RatingViewSet, basename='rating')
