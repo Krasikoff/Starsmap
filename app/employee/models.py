@@ -75,7 +75,7 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=250)
     date_hire = models.DateField(default=datetime.datetime.now)
     date_fire = models.DateField(blank=True, null=True)
-    grade = models.CharField(max_length=8, choices=GRADE, default=GRADE[0])
+    grade = models.CharField(max_length=24, choices=GRADE, default=GRADE[0])
     key_people = models.BooleanField(default=False)
     bus_factor = models.BooleanField(default=False)
     emi = models.FloatField(default=0.0)

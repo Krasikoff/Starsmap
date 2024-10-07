@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15.3-alpine
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=starsmap
+
+  gateway:
+    build: ./gateway/
+    volumes:
+      - static:/var/html/static
+    ports:
+      - 8000:80 
+    depends_on:
+      - web
+
+  web:
+    build: ./
+    restart: always
+    volumes:
+      - static:/app/staticfiles/
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+
+volumes:
+  static:
