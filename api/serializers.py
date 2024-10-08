@@ -1,7 +1,9 @@
 from rest_framework import serializers
 
-from employee.models import (Competence, LastRating, Position,
-                             Rating, Skill, Team, User)
+from employee.models import (
+    Competence, LastRating, Position, Rating, Skill, Team, User, Candidate,
+    Vacancy,
+)
 
 
 class TeamSerializer(serializers.ModelSerializer):
@@ -11,7 +13,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Team
-        fields = 'name', 'leader'
+        fields = 'name', 'leader',
 
 
 class PositionSerializer(serializers.ModelSerializer):
@@ -75,4 +77,62 @@ class UserSerializer(serializers.ModelSerializer):
             'first_name', 'last_name', 'date_hire', 'date_fire', 'team',
             'position', 'grade', 'role', 'key_people', 'bus_factor', 'emi',
             'lastrating',
+        )
+
+
+class CandidateSerializer(serializers.ModelSerializer):
+    """Сериалайзер модели"""
+
+    class Meta:
+        model = Candidate
+        fields = 'link',
+
+
+class VacancySerializer(serializers.ModelSerializer):
+    """Сериалайзер модели"""
+    team = serializers.StringRelatedField(read_only=True)
+    position = serializers.StringRelatedField(read_only=True)
+    candidate = CandidateSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Vacancy
+        fields = 'position', 'team', 'closed', 'candidate',
+
+
+class UserInTeamSerializer(serializers.ModelSerializer):
+    """Сериалайзер модели."""
+    position = serializers.StringRelatedField(read_only=True)
+    
+    class Meta:
+        model = User
+        fields = 'id', 'last_name', 'first_name', 'position',
+
+
+class VacancyInTeamSerializer(serializers.ModelSerializer):
+    """Сериалайзер модели."""
+    position = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = Vacancy
+        fields = 'id', 'position', 'closed',
+
+
+
+class TeamMemberSerializer(serializers.ModelSerializer):
+    """Сериалайзер модели.
+    
+    UserInTeamSerializer -> UserSerializer
+    VacancyInTeamSerializer -> VacancySerializer
+    """
+    user = UserInTeamSerializer(many=True, read_only=True)
+    vacancy = VacancyInTeamSerializer(many=True, read_only=True)
+    leader = serializers.CharField(source='leaderinteam.leader')
+
+    class Meta:
+        model = Team
+        fields = (
+            'name', 
+            'leader', 
+            'user',
+            'vacancy',
         )

@@ -6,8 +6,15 @@ paths:
   /api/v1/team/:
     get:
       operationId: listTeams
-      description: ''
-      parameters: []
+      description: "\u0412\u044C\u044E\u0441\u0435\u0442 \u043C\u043E\u0434\u0435\u043B\
+        \u0438"
+      parameters:
+      - name: name
+        required: false
+        in: query
+        description: name
+        schema:
+          type: string
       responses:
         '200':
           content:
@@ -22,13 +29,20 @@ paths:
   /api/v1/team/{id}/:
     get:
       operationId: retrieveTeam
-      description: ''
+      description: "\u0412\u044C\u044E\u0441\u0435\u0442 \u043C\u043E\u0434\u0435\u043B\
+        \u0438"
       parameters:
       - name: id
         in: path
         required: true
         description: "A unique integer value identifying this \u041A\u043E\u043C\u0430\
           \u043D\u0434\u0430."
+        schema:
+          type: string
+      - name: name
+        required: false
+        in: query
+        description: name
         schema:
           type: string
       responses:
@@ -43,8 +57,15 @@ paths:
   /api/v1/competence/:
     get:
       operationId: listCompetences
-      description: ''
-      parameters: []
+      description: "\u0412\u044C\u044E\u0441\u0435\u0442 \u043C\u043E\u0434\u0435\u043B\
+        \u0438"
+      parameters:
+      - name: name
+        required: false
+        in: query
+        description: name
+        schema:
+          type: string
       responses:
         '200':
           content:
@@ -52,14 +73,15 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Team'
+                  $ref: '#/components/schemas/Competence'
           description: ''
       tags:
       - api
   /api/v1/competence/{id}/:
     get:
       operationId: retrieveCompetence
-      description: ''
+      description: "\u0412\u044C\u044E\u0441\u0435\u0442 \u043C\u043E\u0434\u0435\u043B\
+        \u0438"
       parameters:
       - name: id
         in: path
@@ -68,20 +90,42 @@ paths:
           \u0435\u0442\u0435\u043D\u0446\u0438\u044F."
         schema:
           type: string
+      - name: name
+        required: false
+        in: query
+        description: name
+        schema:
+          type: string
       responses:
         '200':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Team'
+                $ref: '#/components/schemas/Competence'
           description: ''
       tags:
       - api
   /api/v1/skill/:
     get:
       operationId: listSkills
-      description: ''
-      parameters: []
+      description: "\u0412\u044C\u044E\u0441\u0435\u0442 \u043C\u043E\u0434\u0435\u043B\
+        \u0438"
+      parameters:
+      - name: name
+        required: false
+        in: query
+        description: name
+        schema:
+          type: string
+      - name: domain
+        required: false
+        in: query
+        description: domain
+        schema:
+          type: string
+          enum:
+          - Hard skills
+          - Soft skills
       responses:
         '200':
           content:
@@ -96,7 +140,8 @@ paths:
   /api/v1/skill/{id}/:
     get:
       operationId: retrieveSkill
-      description: ''
+      description: "\u0412\u044C\u044E\u0441\u0435\u0442 \u043C\u043E\u0434\u0435\u043B\
+        \u0438"
       parameters:
       - name: id
         in: path
@@ -105,6 +150,21 @@ paths:
           \u043A."
         schema:
           type: string
+      - name: name
+        required: false
+        in: query
+        description: name
+        schema:
+          type: string
+      - name: domain
+        required: false
+        in: query
+        description: domain
+        schema:
+          type: string
+          enum:
+          - Hard skills
+          - Soft skills
       responses:
         '200':
           content:
@@ -117,7 +177,8 @@ paths:
   /api/v1/rating/:
     get:
       operationId: listRatings
-      description: ''
+      description: "\u0412\u044C\u044E\u0441\u0435\u0442 \u043C\u043E\u0434\u0435\u043B\
+        \u0438"
       parameters: []
       responses:
         '200':
@@ -133,7 +194,8 @@ paths:
   /api/v1/rating/{id}/:
     get:
       operationId: retrieveRating
-      description: ''
+      description: "\u0412\u044C\u044E\u0441\u0435\u0442 \u043C\u043E\u0434\u0435\u043B\
+        \u0438"
       parameters:
       - name: id
         in: path
@@ -154,7 +216,8 @@ paths:
   /api/v1/lastrating/:
     get:
       operationId: listLastRatings
-      description: ''
+      description: "\u0412\u044C\u044E\u0441\u0435\u0442 \u043C\u043E\u0434\u0435\u043B\
+        \u0438"
       parameters: []
       responses:
         '200':
@@ -170,14 +233,14 @@ paths:
   /api/v1/lastrating/{id}/:
     get:
       operationId: retrieveLastRating
-      description: ''
+      description: "\u0412\u044C\u044E\u0441\u0435\u0442 \u043C\u043E\u0434\u0435\u043B\
+        \u0438"
       parameters:
       - name: id
         in: path
         required: true
-        description: "A unique integer value identifying this \u0421\u043E\u043E\u0442\
-          \u0432\u0435\u0442\u0441\u0442\u0432\u0438\u0435 \u043D\u0430 \u043F\u043E\
-          \u0441\u043B\u0435\u0434\u043D\u044E\u044E \u0434\u0430\u0442\u0443."
+        description: "A unique integer value identifying this \u041E\u0446\u0435\u043D\
+          \u043A\u0430 \u043D\u0430\u0432\u044B\u043A\u043E\u0432."
         schema:
           type: string
       responses:
@@ -189,11 +252,18 @@ paths:
           description: ''
       tags:
       - api
-  /api/v1/users/:
+  /api/v1/user/:
     get:
       operationId: listUsers
-      description: ''
-      parameters: []
+      description: "\u0412\u044C\u044E\u0441\u0435\u0442 \u043C\u043E\u0434\u0435\u043B\
+        \u0438"
+      parameters:
+      - name: username
+        required: false
+        in: query
+        description: username
+        schema:
+          type: string
       responses:
         '200':
           content:
@@ -205,16 +275,23 @@ paths:
           description: ''
       tags:
       - api
-  /api/v1/users/{id}/:
+  /api/v1/user/{id}/:
     get:
       operationId: retrieveUser
-      description: ''
+      description: "\u0412\u044C\u044E\u0441\u0435\u0442 \u043C\u043E\u0434\u0435\u043B\
+        \u0438"
       parameters:
       - name: id
         in: path
         required: true
         description: "A unique integer value identifying this \u0421\u043E\u0442\u0440\
           \u0443\u0434\u043D\u0438\u043A."
+        schema:
+          type: string
+      - name: username
+        required: false
+        in: query
+        description: username
         schema:
           type: string
       responses:
@@ -226,9 +303,122 @@ paths:
           description: ''
       tags:
       - api
+  /api/v1/candidate/:
+    get:
+      operationId: listCandidates
+      description: "\u0412\u044C\u044E\u0441\u0435\u0442 \u043C\u043E\u0434\u0435\u043B\
+        \u0438"
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Candidate'
+          description: ''
+      tags:
+      - api
+  /api/v1/candidate/{id}/:
+    get:
+      operationId: retrieveCandidate
+      description: "\u0412\u044C\u044E\u0441\u0435\u0442 \u043C\u043E\u0434\u0435\u043B\
+        \u0438"
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: "A unique integer value identifying this \u041A\u0430\u043D\u0434\
+          \u0438\u0434\u0430\u0442."
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Candidate'
+          description: ''
+      tags:
+      - api
+  /api/v1/vacancy/:
+    get:
+      operationId: listVacancies
+      description: "\u0412\u044C\u044E\u0441\u0435\u0442 \u043C\u043E\u0434\u0435\u043B\
+        \u0438"
+      parameters:
+      - name: position
+        required: false
+        in: query
+        description: position
+        schema:
+          type: string
+      - name: team
+        required: false
+        in: query
+        description: team
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Vacancy'
+          description: ''
+      tags:
+      - api
+  /api/v1/vacancy/{id}/:
+    get:
+      operationId: retrieveVacancy
+      description: "\u0412\u044C\u044E\u0441\u0435\u0442 \u043C\u043E\u0434\u0435\u043B\
+        \u0438"
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: "A unique integer value identifying this \u0412\u0430\u043A\u0430\
+          \u043D\u0441\u0438\u044F."
+        schema:
+          type: string
+      - name: position
+        required: false
+        in: query
+        description: position
+        schema:
+          type: string
+      - name: team
+        required: false
+        in: query
+        description: team
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vacancy'
+          description: ''
+      tags:
+      - api
 components:
   schemas:
     Team:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 250
+        leader:
+          type: string
+      required:
+      - name
+      - leader
+    Competence:
       type: object
       properties:
         id:
@@ -361,6 +551,20 @@ components:
           type: string
           format: date
           nullable: true
+        team:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                maxLength: 250
+              leader:
+                type: string
+            required:
+            - name
+            - leader
+          readOnly: true
         position:
           type: string
           readOnly: true
@@ -449,3 +653,44 @@ components:
       required:
       - first_name
       - last_name
+    Candidate:
+      type: object
+      properties:
+        link:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 200
+          pattern: "^(?:[a-z0-9.+-]*)://(?:[^\\s:@/]+(?::[^\\s:@/]*)?@)?(?:(?:0|25[0-5]|2[0-4][0-9]|1[0-9]?[0-9]?|[1-9][0-9]?)(?:\\\
+            .(?:0|25[0-5]|2[0-4][0-9]|1[0-9]?[0-9]?|[1-9][0-9]?)){3}|\\[[0-9a-f:.]+\\\
+            ]|([a-z\xA1-\uFFFF0-9](?:[a-z\xA1-\uFFFF0-9-]{0,61}[a-z\xA1-\uFFFF0-9])?(?:\\\
+            .(?!-)[a-z\xA1-\uFFFF0-9-]{1,63}(?<!-))*\\.(?!-)(?:[a-z\xA1-\uFFFF-]{2,63}|xn--[a-z0-9]{1,59})(?<!-)\\\
+            .?|localhost))(?::[0-9]{1,5})?(?:[/?#][^\\s]*)?\\z"
+    Vacancy:
+      type: object
+      properties:
+        position:
+          type: string
+          readOnly: true
+        team:
+          type: string
+          readOnly: true
+        closed:
+          type: boolean
+        candidate:
+          type: array
+          items:
+            type: object
+            properties:
+              link:
+                type: string
+                format: uri
+                nullable: true
+                maxLength: 200
+                pattern: "^(?:[a-z0-9.+-]*)://(?:[^\\s:@/]+(?::[^\\s:@/]*)?@)?(?:(?:0|25[0-5]|2[0-4][0-9]|1[0-9]?[0-9]?|[1-9][0-9]?)(?:\\\
+                  .(?:0|25[0-5]|2[0-4][0-9]|1[0-9]?[0-9]?|[1-9][0-9]?)){3}|\\[[0-9a-f:.]+\\\
+                  ]|([a-z\xA1-\uFFFF0-9](?:[a-z\xA1-\uFFFF0-9-]{0,61}[a-z\xA1-\uFFFF\
+                  0-9])?(?:\\.(?!-)[a-z\xA1-\uFFFF0-9-]{1,63}(?<!-))*\\.(?!-)(?:[a-z\xA1\
+                  -\uFFFF-]{2,63}|xn--[a-z0-9]{1,59})(?<!-)\\.?|localhost))(?::[0-9]{1,5})?(?:[/?#][^\\\
+                  s]*)?\\z"
+          readOnly: true

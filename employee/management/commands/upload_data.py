@@ -28,7 +28,7 @@ class Command(BaseCommand):
                 count += 1
                 if count == 1:
                     title = line.split(";")
-                    print(title[1], title[2], title[3], title[4])
+                    print(title[3], title[2], title[1], title[4], title[8], title[10])
                 else:
                     if amount > 0:
                         if count > amount:
@@ -97,7 +97,7 @@ class Command(BaseCommand):
                     )
 
                     print('-----------------------')
-                    print(rating,)
+                    print(team, ',', position, ',', user.grade, ',', skill.domain ,',',rating,)
             print('Должностей: ', Position.objects.count())
             print('Команд: ', Team.objects.count())
             print('Сотрудников: ', User.objects.count())

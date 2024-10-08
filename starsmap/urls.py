@@ -33,7 +33,7 @@ schema_view = get_schema_view(
     openapi.Info(
         title="Starsmap API",
         default_version='v1',
-        description="Документация для приложения cats проекта Kittygram",
+        description="Документация для приложения Starsmap",
         # terms_of_service="URL страницы с пользовательским соглашением",
         contact=openapi.Contact(email="admin@example.ru"),
         license=openapi.License(name="BSD License"),

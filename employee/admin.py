@@ -16,15 +16,14 @@ class LeaderInline(admin.TabularInline):
 
     model = LeaderInTeam
     extra = 0
+    ordering = 'leader',
 
 
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
     """Регистрация админ. страницы команды"""
 
-    inlines = (
-        LeaderInline,
-    )
+    inlines = (LeaderInline,)
 
 
 @admin.register(Skill)
@@ -45,9 +44,7 @@ class RatingInline(admin.TabularInline):
 class LastRatingAdmin(admin.ModelAdmin):
     """Регистрация админ. страницы оценок"""
 
-    inlines = (
-        RatingInline,
-    )
+    inlines = (RatingInline,)
     list_display = (
         'user', 'skill', 'last_match', 'last_date',
     )
