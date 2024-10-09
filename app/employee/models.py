@@ -85,7 +85,7 @@ class User(AbstractUser):
     )
     date_fire = models.DateField(blank=True, null=True, verbose_name='Уволен')
     grade = models.CharField(
-        max_length=8, choices=GRADE, default=GRADE[0], verbose_name='Уровень')
+        max_length=24, choices=GRADE, default=GRADE[0], verbose_name='Уровень')
     key_people = models.BooleanField(default=False,)
     bus_factor = models.BooleanField(default=False,)
     emi = models.FloatField(default=0.0,)
