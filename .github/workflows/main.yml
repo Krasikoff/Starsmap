@@ -98,5 +98,5 @@ jobs:
           sudo docker-compose -f docker-compose.yaml pull
           sudo docker-compose -f docker-compose.yaml down
           sudo docker-compose -f docker-compose.yaml up -d
-          sudo docker-compose -f docker-compose.yaml exec backend python manage.py migrate
-          sudo docker-compose -f docker-compose.yaml exec backend python manage.py collectstatic
+          sudo docker-compose -f docker-compose.yaml exec starsmap-web-1 python manage.py migrate
+          sudo docker-compose -f docker-compose.yaml exec starsmap-web-1 python manage.py collectstatic
