@@ -1,19 +1,17 @@
-from rest_framework import viewsets, filters
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, generics, viewsets
 
-from api.serializers import (
-    CompetenceSerializer, LastRatingSerializer, RaitingSerializer,
-    SkillSerializer, TeamSerializer, UserSerializer, VacancySerializer,
-    CandidateSerializer, TeamMemberSerializer,
-)
-from employee.models import (
-    Competence, LastRating, Rating, Skill, Team, User, Vacancy, Candidate,
-)
+from api.serializers import (CandidateSerializer, CompetenceSerializer,
+                             LastRatingSerializer, RaitingSerializer,
+                             SkillSerializer, TeamMemberSerializer,
+                             TeamSerializer, UserSerializer, VacancySerializer)
+from employee.models import (Candidate, Competence, LastRating, Rating, Skill,
+                             Team, User, Vacancy)
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """Вьюсет модели
-    
+
     http://localhost:8000/api/v1/user/?first_name=Роберт&last_name=Акимов
     """
 
@@ -28,7 +26,7 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
 
 class TeamViewSet(viewsets.ReadOnlyModelViewSet):
     """Вьюсет модели
-    
+
     http://localhost:8000/api/v1/team/?name=Медиа
     """
 
@@ -42,7 +40,7 @@ class TeamViewSet(viewsets.ReadOnlyModelViewSet):
 
 class TeamMemberViewSet(viewsets.ReadOnlyModelViewSet):
     """Вьюсет модели
-    
+
     http://localhost:8000/api/v1/team/?name=Медиа
     """
 
@@ -52,7 +50,6 @@ class TeamMemberViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     search_fields = ('id', )
     filterset_fields = ('name',)
-
 
 
 class CompetenceViewSet(viewsets.ReadOnlyModelViewSet):
@@ -108,3 +105,42 @@ class VacancyViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     search_fields = ('id', )
     filterset_fields = ('position', 'team')
+
+
+class FilterList(generics.ListAPIView):
+    """
+    Return a list of all with optional filtering.
+    """
+
+    model = User
+    serializer_class = UserSerializer
+    filter_fields = (
+        'team_id',
+        'user_id',
+        'grade',
+    )
+
+    def get_queryset(self):
+        queryset = User.objects.all()
+        user_id = self.request.query_params.get('user_id', )
+        team_id = self.request.query_params.get('team_id', 1)
+        grade = self.request.query_params.get('grade')
+        skill_id = self.request.query_params.get('skill_id')
+
+        print('team_id =', team_id, 'user_id =', user_id, 'grade =', grade, 'skill_id =', skill_id)
+
+        queryset = queryset.filter(team=team_id,)
+        if user_id:
+            queryset = queryset.filter(id=user_id, team=team_id,)
+        if grade:
+            queryset = queryset.filter(grade=grade,)
+        if skill_id:
+            queryset = queryset.filter(
+                lastrating__skill__id=skill_id,
+                lastrating__last_match=True,
+            )
+        return queryset
+
+
+class ChoiceList(generics.ListAPIView):
+    pass
