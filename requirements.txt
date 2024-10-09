@@ -5,7 +5,7 @@ django-cors-headers==4.4.0
 drf-yasg==1.21.7
 django-filter==23.1
 isort==5.13.2
-flake8==7.1.1gunicorn
+flake8==7.1.1
 python-dotenv
 psycopg2
 gunicorn
