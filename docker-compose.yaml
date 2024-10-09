@@ -14,7 +14,7 @@ services:
     volumes:
       - static:/var/html/static
     ports:
-      - 8000:80 
+      - 8000:80
     depends_on:
       - web
 

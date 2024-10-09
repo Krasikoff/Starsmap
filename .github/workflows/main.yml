@@ -1,6 +1,9 @@
-name: foodgram_CI
+name: starsmap_CI
 
-on: [push]
+on:
+  push:
+    branches:
+      - develop
 
 jobs:
   tests:
@@ -98,5 +101,6 @@ jobs:
           sudo docker-compose -f docker-compose.yaml pull
           sudo docker-compose -f docker-compose.yaml down
           sudo docker-compose -f docker-compose.yaml up -d
-          sudo docker-compose -f docker-compose.yaml exec starsmap-web-1 python manage.py migrate
-          sudo docker-compose -f docker-compose.yaml exec starsmap-web-1 python manage.py collectstatic
+          sudo docker-compose -f docker-compose.yaml exec starsmap_web_1 python manage.py makemigrations
+          sudo docker-compose -f docker-compose.yaml exec starsmap_web_1 python manage.py migrate
+          sudo docker-compose -f docker-compose.yaml exec starsmap_web_1 python manage.py collectstatic
