@@ -1,6 +1,8 @@
 from django_filters.rest_framework import DjangoFilterBackend
+from django.http import JsonResponse
 from rest_framework import filters, generics, viewsets
 
+from employee.constants import GRADE, MONTH
 from api.serializers import (CandidateSerializer, CompetenceSerializer,
                              LastRatingSerializer, RaitingSerializer,
                              SkillSerializer, TeamMemberSerializer,
@@ -126,8 +128,11 @@ class FilterList(generics.ListAPIView):
         team_id = self.request.query_params.get('team_id', 1)
         grade = self.request.query_params.get('grade')
         skill_id = self.request.query_params.get('skill_id')
+        competence_id = self.request.query_params.get('competence_id')
 
-        print('team_id =', team_id, 'user_id =', user_id, 'grade =', grade, 'skill_id =', skill_id)
+        print(
+            'team_id =', team_id, 'user_id =', user_id, 'grade =', grade,
+            'skill_id =', skill_id, 'competence_id =', competence_id)
 
         queryset = queryset.filter(team=team_id,)
         if user_id:
@@ -139,8 +144,44 @@ class FilterList(generics.ListAPIView):
                 lastrating__skill__id=skill_id,
                 lastrating__last_match=True,
             )
+        if competence_id and (not skill_id):
+#            skill_ids = []
+            skills = Skill.objects.filter(competence=competence_id)
+            for each_skill in skills:
+#                skill_ids.append(each_skill.id)
+                print('skill_id = ', each_skill.id)
+                break
+            queryset = queryset.filter(
+#                lastrating__skill__id_in=skill_ids,
+                lastrating__skill__id=each_skill.id,
+                lastrating__last_match=True,
+            )
         return queryset
 
 
-class ChoiceList(generics.ListAPIView):
-    pass
+def ChoiceList(request):
+
+    team = {}
+    teams = Team.objects.all()
+    for each_team in teams:
+        team[each_team.id] = each_team.name
+
+    competence = {}
+    competences = Competence.objects.all()
+    for each_competence in competences:
+        competence[each_competence.id] = each_competence.name
+
+    skill = {}
+    skills = Skill.objects.all()
+    for each_skill in skills:
+        skill[each_skill.id] = each_skill.name
+
+    grade = dict(GRADE)
+    month = MONTH
+    choices = [
+        {'team': team}, {'competence': competence}, {'skill': skill},
+        {'month': month}, {'grade': grade},
+    ]
+    return JsonResponse(data={
+        'choices': choices
+    })
