@@ -1,17 +1,12 @@
-from django.core.management.base import BaseCommand
-from django.contrib.auth import get_user_model
 from datetime import datetime
-from transliterate import translit
-from starsmap.settings import BASE_DIR
-from employee.models import (
-    Position,
-    Team,
-    Skill,
-    Competence,
-    Rating,
-    LastDateMatch,
-)
 
+from django.contrib.auth import get_user_model
+from django.core.management.base import BaseCommand
+from transliterate import translit
+
+from employee.models import (Competence, LastRating, Position, Rating, Skill,
+                             Team)
+from starsmap.settings import BASE_DIR
 
 User = get_user_model()
 
@@ -33,7 +28,7 @@ class Command(BaseCommand):
                 count += 1
                 if count == 1:
                     title = line.split(";")
-                    print(title[1], title[2], title[3], title[4])
+                    print(title[3], title[2], title[1], title[4], title[8], title[10])
                 else:
                     if amount > 0:
                         if count > amount:
@@ -46,14 +41,14 @@ class Command(BaseCommand):
                     f_name = translit(data[1].split()[1], reversed=True)
                     l_name = translit(data[1].split()[0], reversed=True)
                     try:
-                        last_score_date = datetime.strptime(
+                        last_date = datetime.strptime(
                             data[13], '%d.%m.%Y'
                         )
                         hire_date = datetime.strptime(data[5], '%d.%m.%Y')
                         score_date = datetime.strptime(data[9], '%d.%m.%Y')
                     except Exception as e:
                         print(e)
-                        last_score_date = datetime.strptime(
+                        last_date = datetime.strptime(
                             data[13], '%Y-%m-%d %H:%M:%S'
                         )
                         hire_date = datetime.strptime(
@@ -82,34 +77,35 @@ class Command(BaseCommand):
                         domain=data[8],
                         competence=competence,
                     )
-                    (last_date_match, _) = LastDateMatch.objects.get_or_create(
+                    (last_rating, _) = LastRating.objects.get_or_create(
                         user=user,
                         skill=skill,
-                        competence=competence,
-                        date_last_score=last_score_date
+                        last_date=last_date
                     )
                     if 'да' in data[14]:
-                        last_date_match.match = True
-                        last_date_match.save()
+                        last_rating.last_match = True
+                        last_rating.save()
                     (rating, _) = Rating.objects.get_or_create(
-                        user=user,
+                        last_rating=last_rating,
                         # date=,
                         # date_start=
                         # date_end=,
                         date_score=score_date,
-                        skill=skill,
-                        competence=competence,
                         score=data[10],
                         match=True if 'да' in data[12] else False,
                         chief_proof=True if 'да' in data[21] else False,
                     )
 
                     print('-----------------------')
-                    print(rating, data[21])
+                    print(
+                        team, ',', position, ',', user.grade, ',',
+                        skill.domain, ',', rating,
+                    )
             print('Должностей: ', Position.objects.count())
             print('Команд: ', Team.objects.count())
             print('Сотрудников: ', User.objects.count())
             print('Навыков: ', Skill.objects.count())
             print('Компетенций: ', Competence.objects.count())
+            print('Рейтингов на посл.дату: ', LastRating.objects.count())
             print('Рейтингов: ', Rating.objects.count())
         return None
