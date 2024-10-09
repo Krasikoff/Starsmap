@@ -116,7 +116,7 @@ class User(AbstractUser):
 
     def __str__(self):
         return (
-            f'{self.username}'
+            f'{self.last_name} {self.first_name}'
         )
 
 
@@ -146,6 +146,9 @@ class LastRating(models.Model):
     last_date = models.DateField(
         default=datetime.datetime.now, verbose_name='Дата последней оценки'
     )
+    last_score = models.IntegerField(
+        choices=RATING, default=RATING[0][0], verbose_name='Последняя оценка'
+    )
 
     class Meta:
         ordering = ['user', 'skill',]
@@ -165,7 +168,7 @@ class Rating(models.Model):
         verbose_name='Последняя оценка',
     )
     score = models.IntegerField(
-        choices=RATING, default=RATING[0], verbose_name='Оценка'
+        choices=RATING, default=RATING[0][0], verbose_name='Оценка'
     )
     date_score = models.DateField(
         default=datetime.datetime.now, verbose_name='Дата оценки'

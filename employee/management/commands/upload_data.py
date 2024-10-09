@@ -97,7 +97,10 @@ class Command(BaseCommand):
                     )
 
                     print('-----------------------')
-                    print(team, ',', position, ',', user.grade, ',', skill.domain ,',',rating,)
+                    print(
+                        team, ',', position, ',', user.grade, ',',
+                        skill.domain, ',', rating,
+                    )
             print('Должностей: ', Position.objects.count())
             print('Команд: ', Team.objects.count())
             print('Сотрудников: ', User.objects.count())

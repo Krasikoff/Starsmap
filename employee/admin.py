@@ -46,7 +46,7 @@ class LastRatingAdmin(admin.ModelAdmin):
 
     inlines = (RatingInline,)
     list_display = (
-        'user', 'skill', 'last_match', 'last_date',
+        'user', 'skill', 'last_score', 'last_match', 'last_date',
     )
     list_filter = ['user', 'skill', 'last_match', 'last_date']
 

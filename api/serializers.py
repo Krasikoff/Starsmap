@@ -1,9 +1,7 @@
 from rest_framework import serializers
 
-from employee.models import (
-    Competence, LastRating, Position, Rating, Skill, Team, User, Candidate,
-    Vacancy,
-)
+from employee.models import (Candidate, Competence, LastRating, Position,
+                             Rating, Skill, Team, User, Vacancy)
 
 
 class TeamSerializer(serializers.ModelSerializer):
@@ -13,7 +11,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Team
-        fields = 'name', 'leader',
+        fields = 'id', 'name', 'leader',
 
 
 class PositionSerializer(serializers.ModelSerializer):
@@ -39,7 +37,7 @@ class SkillSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Skill
-        fields = 'name', 'domain', 'competence'
+        fields = 'id', 'name', 'domain', 'competence'
 
 
 class RaitingSerializer(serializers.ModelSerializer):
@@ -48,7 +46,7 @@ class RaitingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
         fields = (
-            'score', 'date_score', 'need_to_study',
+            'id', 'score', 'date_score', 'need_to_study',
             'date_need', 'date_start', 'date_end', 'match', 'chief_proof',
         )
 
@@ -61,7 +59,7 @@ class LastRatingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = LastRating
-        fields = 'skill', 'last_match', 'last_date', 'rating'
+        fields = 'id', 'skill', 'last_score', 'last_match', 'last_date', 'last_score', 'rating'
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -74,7 +72,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'first_name', 'last_name', 'date_hire', 'date_fire', 'team',
+            'id', 'first_name', 'last_name', 'date_hire', 'date_fire', 'team',
             'position', 'grade', 'role', 'key_people', 'bus_factor', 'emi',
             'lastrating',
         )
@@ -102,7 +100,7 @@ class VacancySerializer(serializers.ModelSerializer):
 class UserInTeamSerializer(serializers.ModelSerializer):
     """Сериалайзер модели."""
     position = serializers.StringRelatedField(read_only=True)
-    
+
     class Meta:
         model = User
         fields = 'id', 'last_name', 'first_name', 'position',
@@ -117,10 +115,9 @@ class VacancyInTeamSerializer(serializers.ModelSerializer):
         fields = 'id', 'position', 'closed',
 
 
-
 class TeamMemberSerializer(serializers.ModelSerializer):
     """Сериалайзер модели.
-    
+
     UserInTeamSerializer -> UserSerializer
     VacancyInTeamSerializer -> VacancySerializer
     """
@@ -131,8 +128,8 @@ class TeamMemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
         fields = (
-            'name', 
-            'leader', 
+            'name',
+            'leader',
             'user',
             'vacancy',
         )
