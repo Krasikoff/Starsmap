@@ -155,7 +155,7 @@ class LastRating(models.Model):
         verbose_name_plural = 'Оценки навыков'
 
     def __str__(self):
-        return (f'{self.last_match},')
+        return (f'соотв:{self.last_match}, оценка:{self.last_score}, дата:{self.last_date}')
 
 
 class Rating(models.Model):
