@@ -1,14 +1,13 @@
-from django_filters.rest_framework import DjangoFilterBackend
-from django.http import JsonResponse
-from rest_framework import filters, generics, viewsets
-
-from employee.constants import GRADE, MONTH
 from api.serializers import (CandidateSerializer, CompetenceSerializer,
                              LastRatingSerializer, RaitingSerializer,
                              SkillSerializer, TeamMemberSerializer,
                              TeamSerializer, UserSerializer, VacancySerializer)
+from django.http import JsonResponse
+from django_filters.rest_framework import DjangoFilterBackend
+from employee.constants import GRADE, MONTH
 from employee.models import (Candidate, Competence, LastRating, Rating, Skill,
                              Team, User, Vacancy)
+from rest_framework import filters, generics, viewsets
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
@@ -112,6 +111,12 @@ class VacancyViewSet(viewsets.ReadOnlyModelViewSet):
 class FilterList(generics.ListAPIView):
     """
     Return a list of all with optional filtering.
+
+    param1 -- http://localhost:8000/api/v1/filter/?team_id=team_id&user_id=user_id&skill_id=skill_id
+    param2 -- http://localhost:8000/api/v1/filter/?user_id=user_id&skill_id=skill_id (team_id=1 by default)
+    param3 -- http://localhost:8000/api/v1/filter/?team_id=team_id&competence_id=competence_id (skill&competence don't work together)
+    param4 -- http://localhost:8000/api/v1/filter/?team_id=team_id&grade=grade (grade_id=grade but working grade)
+    param5 -- http://localhost:8000/api/v1/filter/?team_id=team_id&month_id=month_id (comming soon, now only today)
     """
 
     model = User
@@ -145,43 +150,41 @@ class FilterList(generics.ListAPIView):
                 lastrating__last_match=True,
             )
         if competence_id and (not skill_id):
-#            skill_ids = []
-            skills = Skill.objects.filter(competence=competence_id)
-            for each_skill in skills:
-#                skill_ids.append(each_skill.id)
-                print('skill_id = ', each_skill.id)
-                break
             queryset = queryset.filter(
-#                lastrating__skill__id_in=skill_ids,
-                lastrating__skill__id=each_skill.id,
+                lastrating__skill__competence_id=competence_id,
                 lastrating__last_match=True,
             )
         return queryset
 
 
-def ChoiceList(request):
+class ChoiceListSet(generics.ListAPIView):
+    """Return a list of chice for optional filtering in api/v1/filter."""
 
-    team = {}
-    teams = Team.objects.all()
-    for each_team in teams:
-        team[each_team.id] = each_team.name
+    def get_serializer_class(self):
+        pass
 
-    competence = {}
-    competences = Competence.objects.all()
-    for each_competence in competences:
-        competence[each_competence.id] = each_competence.name
+    def list(self, *args, **kwargs):
+        team = {}
+        teams = Team.objects.all()
+        for each_team in teams:
+            team[each_team.id] = each_team.name
 
-    skill = {}
-    skills = Skill.objects.all()
-    for each_skill in skills:
-        skill[each_skill.id] = each_skill.name
+        competence = {}
+        competences = Competence.objects.all()
+        for each_competence in competences:
+            competence[each_competence.id] = each_competence.name
 
-    grade = dict(GRADE)
-    month = MONTH
-    choices = [
-        {'team': team}, {'competence': competence}, {'skill': skill},
-        {'month': month}, {'grade': grade},
-    ]
-    return JsonResponse(data={
-        'choices': choices
-    })
+        skill = {}
+        skills = Skill.objects.all()
+        for each_skill in skills:
+            skill[each_skill.id] = each_skill.name
+
+        grade = dict(GRADE)
+        month = MONTH
+        choices = [
+            {'team': team}, {'competence': competence}, {'skill': skill},
+            {'month': month}, {'grade': grade},
+        ]
+        return JsonResponse(data={
+            'choices': choices
+        })

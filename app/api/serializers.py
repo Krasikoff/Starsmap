@@ -1,7 +1,6 @@
-from rest_framework import serializers
-
 from employee.models import (Candidate, Competence, LastRating, Position,
                              Rating, Skill, Team, User, Vacancy)
+from rest_framework import serializers
 
 
 class TeamSerializer(serializers.ModelSerializer):

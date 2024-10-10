@@ -1,10 +1,9 @@
+from api.views import (CandidateViewSet, ChoiceListSet, CompetenceViewSet,
+                       FilterList, LastRatingViewSet, RatingViewSet,
+                       SkillViewSet, TeamMemberViewSet, TeamViewSet,
+                       UserViewSet, VacancyViewSet)
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
-
-from api.views import (CandidateViewSet, CompetenceViewSet, FilterList,
-                       LastRatingViewSet, RatingViewSet, SkillViewSet,
-                       TeamMemberViewSet, TeamViewSet, UserViewSet,
-                       VacancyViewSet, ChoiceList)
 
 router_v1 = DefaultRouter()
 router_v1.register('team', TeamViewSet, basename='team')
@@ -17,8 +16,9 @@ router_v1.register('user', UserViewSet, basename='user')
 router_v1.register('candidate', CandidateViewSet, basename='candidate')
 router_v1.register('vacancy', VacancyViewSet, basename='vacancy')
 
+
 urlpatterns = [
     path('v1/', include(router_v1.urls), name='api-root'),
-    path('v1/choice/', ChoiceList, name='choice-list'),
+    path('v1/choice/', ChoiceListSet.as_view(), name='choice-list'),
     path('v1/filter/', FilterList.as_view(), name='filter'),
 ]
