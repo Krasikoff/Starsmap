@@ -1,10 +1,9 @@
+from api.views import (CandidateViewSet, ChoiceListSet, CompetenceViewSet,
+                       FilterList, LastRatingViewSet, RatingViewSet,
+                       SkillViewSet, TeamMemberViewSet, TeamViewSet,
+                       UserViewSet, VacancyViewSet)
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
-
-from api.views import (CandidateViewSet, CompetenceViewSet, FilterList,
-                       LastRatingViewSet, RatingViewSet, SkillViewSet,
-                       TeamMemberViewSet, TeamViewSet, UserViewSet,
-                       VacancyViewSet, ChoiceListSet)
 
 router_v1 = DefaultRouter()
 router_v1.register('team', TeamViewSet, basename='team')

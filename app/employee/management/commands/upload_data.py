@@ -2,11 +2,10 @@ from datetime import datetime
 
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
-from transliterate import translit
-
 from employee.models import (Competence, LastRating, Position, Rating, Skill,
                              Team)
 from starsmap.settings import BASE_DIR
+from transliterate import translit
 
 User = get_user_model()
 
@@ -38,15 +37,15 @@ class Command(BaseCommand):
                         name=data[2]
                     )
                     (team, _) = Team.objects.get_or_create(name=data[3])
-                    f_name = translit(data[1].split()[1], reversed=True).replace("'",'')
-                    l_name = translit(data[1].split()[0], reversed=True).replace("'",'')
+                    f_name = translit(data[1].split()[1], reversed=True).replace("'", '')
+                    l_name = translit(data[1].split()[0], reversed=True).replace("'", '')
                     try:
                         last_date = datetime.strptime(
                             data[13], '%d.%m.%Y'
                         )
                         hire_date = datetime.strptime(data[5], '%d.%m.%Y')
                         score_date = datetime.strptime(data[9], '%d.%m.%Y')
-                    except Exception as e:
+                    except Exception:
                         last_date = datetime.strptime(
                             data[13], '%Y-%m-%d %H:%M:%S'
                         )

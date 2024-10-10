@@ -1,14 +1,13 @@
-from django_filters.rest_framework import DjangoFilterBackend
-from django.http import JsonResponse
-from rest_framework import filters, generics, viewsets
-
-from employee.constants import GRADE, MONTH
 from api.serializers import (CandidateSerializer, CompetenceSerializer,
                              LastRatingSerializer, RaitingSerializer,
                              SkillSerializer, TeamMemberSerializer,
                              TeamSerializer, UserSerializer, VacancySerializer)
+from django.http import JsonResponse
+from django_filters.rest_framework import DjangoFilterBackend
+from employee.constants import GRADE, MONTH
 from employee.models import (Candidate, Competence, LastRating, Rating, Skill,
                              Team, User, Vacancy)
+from rest_framework import filters, generics, viewsets
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
@@ -112,7 +111,7 @@ class VacancyViewSet(viewsets.ReadOnlyModelViewSet):
 class FilterList(generics.ListAPIView):
     """
     Return a list of all with optional filtering.
-    
+
     param1 -- http://localhost:8000/api/v1/filter/?team_id=team_id&user_id=user_id&skill_id=skill_id
     param2 -- http://localhost:8000/api/v1/filter/?user_id=user_id&skill_id=skill_id (team_id=1 by default)
     param3 -- http://localhost:8000/api/v1/filter/?team_id=team_id&competence_id=competence_id (skill&competence don't work together)
@@ -157,11 +156,10 @@ class FilterList(generics.ListAPIView):
             )
         return queryset
 
+
 class ChoiceListSet(generics.ListAPIView):
-    """
-    Return a list of chice for optional filtering in api/v1/filter.
-    
-    """
+    """Return a list of chice for optional filtering in api/v1/filter."""
+
     def get_serializer_class(self):
         pass
 

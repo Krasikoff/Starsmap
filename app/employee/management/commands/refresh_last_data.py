@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
-
-from employee.models import (LastRating, Rating, Skill, User,)
+from employee.models import LastRating, Rating, Skill, User
 
 User = get_user_model()
 
