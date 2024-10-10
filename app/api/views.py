@@ -6,8 +6,7 @@ from employee.constants import GRADE, MONTH
 from api.serializers import (CandidateSerializer, CompetenceSerializer,
                              LastRatingSerializer, RaitingSerializer,
                              SkillSerializer, TeamMemberSerializer,
-                             TeamSerializer, UserSerializer, VacancySerializer,
-                             ChoiceSerializer)
+                             TeamSerializer, UserSerializer, VacancySerializer)
 from employee.models import (Candidate, Competence, LastRating, Rating, Skill,
                              Team, User, Vacancy)
 
@@ -113,6 +112,12 @@ class VacancyViewSet(viewsets.ReadOnlyModelViewSet):
 class FilterList(generics.ListAPIView):
     """
     Return a list of all with optional filtering.
+    
+    param1 -- http://localhost:8000/api/v1/filter/?team_id=team_id&user_id=user_id&skill_id=skill_id
+    param2 -- http://localhost:8000/api/v1/filter/?user_id=user_id&skill_id=skill_id (team_id=1 by default)
+    param3 -- http://localhost:8000/api/v1/filter/?team_id=team_id&competence_id=competence_id (skill&competence don't work together)
+    param4 -- http://localhost:8000/api/v1/filter/?team_id=team_id&grade=grade (grade_id=grade but working grade)
+    param5 -- http://localhost:8000/api/v1/filter/?team_id=team_id&month_id=month_id (comming soon, now only today)
     """
 
     model = User
@@ -152,30 +157,36 @@ class FilterList(generics.ListAPIView):
             )
         return queryset
 
+class ChoiceListSet(generics.ListAPIView):
+    """
+    Return a list of chice for optional filtering in api/v1/filter.
+    
+    """
+    def get_serializer_class(self):
+        pass
 
-def ChoiceList(request):
-#    serializer_class = ChoiceSerializer
-    team = {}
-    teams = Team.objects.all()
-    for each_team in teams:
-        team[each_team.id] = each_team.name
+    def list(self, *args, **kwargs):
+        team = {}
+        teams = Team.objects.all()
+        for each_team in teams:
+            team[each_team.id] = each_team.name
 
-    competence = {}
-    competences = Competence.objects.all()
-    for each_competence in competences:
-        competence[each_competence.id] = each_competence.name
+        competence = {}
+        competences = Competence.objects.all()
+        for each_competence in competences:
+            competence[each_competence.id] = each_competence.name
 
-    skill = {}
-    skills = Skill.objects.all()
-    for each_skill in skills:
-        skill[each_skill.id] = each_skill.name
+        skill = {}
+        skills = Skill.objects.all()
+        for each_skill in skills:
+            skill[each_skill.id] = each_skill.name
 
-    grade = dict(GRADE)
-    month = MONTH
-    choices = [
-        {'team': team}, {'competence': competence}, {'skill': skill},
-        {'month': month}, {'grade': grade},
-    ]
-    return JsonResponse(data={
-        'choices': choices
-    })
+        grade = dict(GRADE)
+        month = MONTH
+        choices = [
+            {'team': team}, {'competence': competence}, {'skill': skill},
+            {'month': month}, {'grade': grade},
+        ]
+        return JsonResponse(data={
+            'choices': choices
+        })
