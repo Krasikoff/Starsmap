@@ -174,4 +174,4 @@ CORS_ALLOWED_ORIGINS = [
 
 PERSONAL_ACCOUNT_URL_NAME = 'me'
 
-CSRF_TRUSTED_ORIGINS = ['https://*.mydomain.com', 'https://*.127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://starsmap.ddns.net', 'https://*.127.0.0.1']
