@@ -133,3 +133,6 @@ class TeamMemberSerializer(serializers.ModelSerializer):
             'user',
             'vacancy',
         )
+
+class ChoiceSerializer(serializers.ModelSerializer):
+    pass

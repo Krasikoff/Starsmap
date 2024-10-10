@@ -38,8 +38,8 @@ class Command(BaseCommand):
                         name=data[2]
                     )
                     (team, _) = Team.objects.get_or_create(name=data[3])
-                    f_name = translit(data[1].split()[1], reversed=True)
-                    l_name = translit(data[1].split()[0], reversed=True)
+                    f_name = translit(data[1].split()[1], reversed=True).replace("'",'')
+                    l_name = translit(data[1].split()[0], reversed=True).replace("'",'')
                     try:
                         last_date = datetime.strptime(
                             data[13], '%d.%m.%Y'
@@ -47,7 +47,6 @@ class Command(BaseCommand):
                         hire_date = datetime.strptime(data[5], '%d.%m.%Y')
                         score_date = datetime.strptime(data[9], '%d.%m.%Y')
                     except Exception as e:
-                        print(e)
                         last_date = datetime.strptime(
                             data[13], '%Y-%m-%d %H:%M:%S'
                         )

@@ -52,8 +52,11 @@ python manage.py migrate
 ```
 - наполняем БД, если требуется
 в BASE_DIR должен лежать data.csv в определенном формате.
+* загрузка из XL в БД
+* согласование последней оценки между rating и lastrating
 ``` shell
 python manage.py upload_data
+python manage.py refresh_last_data
 ```
 - запуск
 ``` shell

@@ -6,7 +6,8 @@ from employee.constants import GRADE, MONTH
 from api.serializers import (CandidateSerializer, CompetenceSerializer,
                              LastRatingSerializer, RaitingSerializer,
                              SkillSerializer, TeamMemberSerializer,
-                             TeamSerializer, UserSerializer, VacancySerializer)
+                             TeamSerializer, UserSerializer, VacancySerializer,
+                             ChoiceSerializer)
 from employee.models import (Candidate, Competence, LastRating, Rating, Skill,
                              Team, User, Vacancy)
 
@@ -145,22 +146,15 @@ class FilterList(generics.ListAPIView):
                 lastrating__last_match=True,
             )
         if competence_id and (not skill_id):
-#            skill_ids = []
-            skills = Skill.objects.filter(competence=competence_id)
-            for each_skill in skills:
-#                skill_ids.append(each_skill.id)
-                print('skill_id = ', each_skill.id)
-                break
             queryset = queryset.filter(
-#                lastrating__skill__id_in=skill_ids,
-                lastrating__skill__id=each_skill.id,
+                lastrating__skill__competence_id=competence_id,
                 lastrating__last_match=True,
             )
         return queryset
 
 
 def ChoiceList(request):
-
+#    serializer_class = ChoiceSerializer
     team = {}
     teams = Team.objects.all()
     for each_team in teams:
