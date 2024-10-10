@@ -106,4 +106,4 @@ jobs:
           sudo docker exec starsmap_web_1 python manage.py migrate
           sudo docker exec starsmap_web_1 python manage.py collectstatic --no-input
           sudo docker exec starsmap_web_1 python manage.py createsuperuser --noinput --username admin --password admin
-          sudo docker exec starsmap_web_1 python manage.py upload_data
+          
