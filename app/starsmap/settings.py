@@ -173,3 +173,5 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 PERSONAL_ACCOUNT_URL_NAME = 'me'
+
+CSRF_TRUSTED_ORIGINS = ['https://starsmap.ddns.net', 'https://*.127.0.0.1']
