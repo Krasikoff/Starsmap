@@ -172,7 +172,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_URLS_REGEX = r'^/api/.*$'
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
-    'https://rosbank-kappa.vercel.app/',
+    'https://rosbank-kappa.vercel.app',
 ]
 
 PERSONAL_ACCOUNT_URL_NAME = 'me'
