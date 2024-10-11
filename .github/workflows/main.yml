@@ -103,7 +103,6 @@ jobs:
         passphrase: ${{ secrets.PASSPHRASE }}
         script: |
           cd starsmap
-          echo APP_STAGE=prod >> .env
           sudo docker-compose -f docker-compose.yaml pull
           sudo docker-compose -f docker-compose.yaml down
           sudo docker-compose -f docker-compose.yaml up -d
