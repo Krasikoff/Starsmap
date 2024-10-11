@@ -58,6 +58,8 @@ jobs:
   build_gateway_and_push_to_docker_hub:
     name: Push gateway Docker image to DockerHub
     runs-on: ubuntu-latest
+    needs: 
+      - tests
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
@@ -79,6 +81,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: 
       - build_and_push_to_docker_hub
+      - build_gateway_and_push_to_docker_hub
     steps:
     - name: Checkout repo
       uses: actions/checkout@v4
@@ -100,6 +103,7 @@ jobs:
         passphrase: ${{ secrets.PASSPHRASE }}
         script: |
           cd starsmap
+          echo APP_STAGE=prod >> .env
           sudo docker-compose -f docker-compose.yaml pull
           sudo docker-compose -f docker-compose.yaml down
           sudo docker-compose -f docker-compose.yaml up -d

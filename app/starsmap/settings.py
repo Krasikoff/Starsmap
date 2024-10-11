@@ -86,24 +86,26 @@ WSGI_APPLICATION = 'starsmap.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+app_stage = os.environ.get('APP_STAGE', 'dev')
+if app_stage == 'dev':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
-# DATABASES = {
-#     'default': {
-#         'ENGINE': os.getenv('DB_ENGINE',
-#                             default='django.db.backends.postgresql_psycopg2'),
-#         'NAME': os.getenv('DB_NAME', default='database'),
-#         'USER': os.getenv('POSTGRES_USER', default='postgres'),
-#         'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='postgres'),
-#         'HOST': os.getenv('DB_HOST', default='db'),
-#         'PORT': os.getenv('DB_PORT', default=5432)
-#     }
-# }
+elif app_stage == 'prod':
+    DATABASES = {
+        'default': {
+            'ENGINE': os.getenv('DB_ENGINE',
+                                default='django.db.backends.postgresql_psycopg2'),
+            'NAME': os.getenv('DB_NAME', default='database'),
+            'USER': os.getenv('POSTGRES_USER', default='postgres'),
+            'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='postgres'),
+            'HOST': os.getenv('DB_HOST', default='db'),
+            'PORT': os.getenv('DB_PORT', default=5432)
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -170,6 +172,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_URLS_REGEX = r'^/api/.*$'
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
+    'https://rosbank-kappa.vercel.app/',
 ]
 
 PERSONAL_ACCOUNT_URL_NAME = 'me'
