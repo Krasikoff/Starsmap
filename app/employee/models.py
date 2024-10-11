@@ -2,6 +2,7 @@ import datetime
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+
 from employee.constants import DOMAIN, GRADE, RATING, ROLE_CHOICES, USER
 
 

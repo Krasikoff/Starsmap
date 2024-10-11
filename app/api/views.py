@@ -1,13 +1,15 @@
-from api.serializers import (CandidateSerializer, CompetenceSerializer,
-                             LastRatingSerializer, RaitingSerializer,
-                             SkillSerializer, TeamMemberSerializer,
-                             TeamSerializer, UserSerializer, VacancySerializer)
 from django.http import JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend
-from employee.constants import GRADE, MONTH
-from employee.models import (Candidate, Competence, LastRating, Rating, Skill,
-                             Team, User, Vacancy)
 from rest_framework import filters, generics, viewsets
+
+from api.serializers import (CandidateSerializer, CompetenceSerializer,
+                             LastRatingSerializer, PositionSerializer,
+                             RaitingSerializer, SkillSerializer,
+                             TeamMemberSerializer, TeamSerializer,
+                             UserSerializer, VacancySerializer)
+from employee.constants import GRADE, MONTH
+from employee.models import (Candidate, Competence, LastRating, Position,
+                             Rating, Skill, Team, User, Vacancy)
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
@@ -80,7 +82,6 @@ class RatingViewSet(viewsets.ReadOnlyModelViewSet):
 
     queryset = Rating.objects.all()
     serializer_class = RaitingSerializer
-#    http_method_names = ['get',]
 
 
 class LastRatingViewSet(viewsets.ReadOnlyModelViewSet):
@@ -134,14 +135,10 @@ class FilterList(generics.ListAPIView):
         grade = self.request.query_params.get('grade')
         skill_id = self.request.query_params.get('skill_id')
         competence_id = self.request.query_params.get('competence_id')
-
-        print(
-            'team_id =', team_id, 'user_id =', user_id, 'grade =', grade,
-            'skill_id =', skill_id, 'competence_id =', competence_id)
-
         queryset = queryset.filter(team=team_id,)
         if user_id:
             queryset = queryset.filter(id=user_id, team=team_id,)
+
         if grade:
             queryset = queryset.filter(grade=grade,)
         if skill_id:
@@ -188,3 +185,10 @@ class ChoiceListSet(generics.ListAPIView):
         return JsonResponse(data={
             'choices': choices
         })
+
+
+class PositionViewSet(viewsets.ReadOnlyModelViewSet):
+    """Вьюсет модели"""
+
+    queryset = Position.objects.all()
+    serializer_class = PositionSerializer

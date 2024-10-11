@@ -3,6 +3,7 @@ from datetime import datetime
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from django.shortcuts import get_list_or_404, get_object_or_404, render
+
 from employee.models import LastRating, Team
 
 User = get_user_model()
@@ -28,12 +29,11 @@ def rating_detail(request, pk):
 
 
 def rating_list(request):
-    rating_catalog = get_list_or_404(User)
+    rating_catalog = get_list_or_404(User, is_superuser=False)
     for line in rating_catalog:
         teams = Team.objects.filter(user__id=line.id)
         for team in teams:
             line.teamname = team
-            print(line.username, team, line.teamname)
     template = 'rating/list.html'
     context = {'rating_list': rating_catalog,}
     return render(request, template, context)

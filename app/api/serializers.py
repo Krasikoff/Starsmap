@@ -1,6 +1,7 @@
+from rest_framework import serializers
+
 from employee.models import (Candidate, Competence, LastRating, Position,
                              Rating, Skill, Team, User, Vacancy)
-from rest_framework import serializers
 
 
 class TeamSerializer(serializers.ModelSerializer):
@@ -16,9 +17,11 @@ class TeamSerializer(serializers.ModelSerializer):
 class PositionSerializer(serializers.ModelSerializer):
     """Сериалайзер модели"""
 
+    users_count = serializers.IntegerField(source='user.count', read_only=True,)
+
     class Meta:
         model = Position
-        fields = '__all__'
+        fields = 'name', 'users_count'
 
 
 class CompetenceSerializer(serializers.ModelSerializer):
@@ -64,17 +67,29 @@ class LastRatingSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     """Сериалайзер модели"""
 
-    position = serializers.StringRelatedField(read_only=True)
+    p_count = {}
+    position = serializers.CharField(read_only=True)
     lastrating = LastRatingSerializer(many=True, read_only=True)
     team = TeamSerializer(many=True, read_only=True)
+
+    position_count = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = (
             'id', 'first_name', 'last_name', 'date_hire', 'date_fire', 'team',
-            'position', 'grade', 'role', 'key_people', 'bus_factor', 'emi',
+            'position', 'position_count', 'grade', 'role', 'key_people', 'bus_factor', 'emi',
             'lastrating',
         )
+
+    p_count.clear()
+
+    def get_position_count(self, obj):
+        if obj.position in self.p_count:
+            self.p_count[obj.position] += 1
+        else:
+            self.p_count[obj.position] = 1
+        return self.p_count[obj.position]
 
 
 class CandidateSerializer(serializers.ModelSerializer):
