@@ -33,3 +33,5 @@ ROLE_CHOICES = (
     (TEAM_CHIEF, 'Руководитель'),
     (USER, 'Пользователь')
 )
+
+P_COUNT = {}

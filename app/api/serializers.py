@@ -1,7 +1,7 @@
-from rest_framework import serializers
-
+from employee.constants import P_COUNT
 from employee.models import (Candidate, Competence, LastRating, Position,
                              Rating, Skill, Team, User, Vacancy)
+from rest_framework import serializers
 
 
 class TeamSerializer(serializers.ModelSerializer):
@@ -67,8 +67,7 @@ class LastRatingSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     """Сериалайзер модели"""
 
-    p_count = {}
-    position = serializers.CharField(read_only=True)
+    position = serializers.CharField(read_only=True, default=0)
     lastrating = LastRatingSerializer(many=True, read_only=True)
     team = TeamSerializer(many=True, read_only=True)
 
@@ -82,7 +81,7 @@ class UserSerializer(serializers.ModelSerializer):
             'lastrating',
         )
 
-    p_count.clear()
+    p_count = P_COUNT
 
     def get_position_count(self, obj):
         if obj.position in self.p_count:

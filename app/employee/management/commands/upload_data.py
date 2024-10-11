@@ -2,11 +2,10 @@ from datetime import datetime
 
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
-from transliterate import translit
-
 from employee.models import (Competence, LastRating, Position, Rating, Skill,
                              Team)
 from starsmap.settings import BASE_DIR
+from transliterate import translit
 
 User = get_user_model()
 

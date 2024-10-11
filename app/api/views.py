@@ -1,15 +1,14 @@
-from django.http import JsonResponse
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, generics, viewsets
-
 from api.serializers import (CandidateSerializer, CompetenceSerializer,
                              LastRatingSerializer, PositionSerializer,
                              RaitingSerializer, SkillSerializer,
                              TeamMemberSerializer, TeamSerializer,
                              UserSerializer, VacancySerializer)
-from employee.constants import GRADE, MONTH
+from django.http import JsonResponse
+from django_filters.rest_framework import DjangoFilterBackend
+from employee.constants import GRADE, MONTH, P_COUNT
 from employee.models import (Candidate, Competence, LastRating, Position,
                              Rating, Skill, Team, User, Vacancy)
+from rest_framework import filters, generics, viewsets
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
@@ -151,6 +150,7 @@ class FilterList(generics.ListAPIView):
                 lastrating__skill__competence_id=competence_id,
                 lastrating__last_match=True,
             )
+        P_COUNT.clear()
         return queryset
 
 
@@ -158,7 +158,7 @@ class ChoiceListSet(generics.ListAPIView):
     """Return a list of chice for optional filtering in api/v1/filter."""
 
     def get_serializer_class(self):
-        pass
+        return 'fake_stub_serializer'
 
     def list(self, *args, **kwargs):
         team = {}
