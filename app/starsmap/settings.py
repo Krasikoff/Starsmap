@@ -16,15 +16,20 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+app_stage = os.environ.get('APP_STAGE', 'dev')
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*tw#v6$ed@7h=bnkj3@+lzr9g-(b5&!*!13x@i@+5&$x^2c#fa'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'secret')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if app_stage == 'prod':
+    DEBUG = False
+else:
+    DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -86,7 +91,6 @@ WSGI_APPLICATION = 'starsmap.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-app_stage = os.environ.get('APP_STAGE', 'dev')
 if app_stage == 'dev':
     DATABASES = {
         'default': {
@@ -178,3 +182,7 @@ CORS_ALLOWED_ORIGINS = [
 PERSONAL_ACCOUNT_URL_NAME = 'me'
 
 CSRF_TRUSTED_ORIGINS = ['https://starsmap.ddns.net', 'https://*.127.0.0.1']
+
+ADMINS = [
+    ['admin', 'service@example.com']
+]
