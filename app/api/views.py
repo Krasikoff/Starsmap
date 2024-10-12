@@ -2,7 +2,8 @@ from api.serializers import (CandidateSerializer, CompetenceSerializer,
                              LastRatingSerializer, PositionSerializer,
                              RaitingSerializer, SkillSerializer,
                              TeamMemberSerializer, TeamSerializer,
-                             UserSerializer, VacancySerializer)
+                             UserSerializer, VacancySerializer,
+                             FilterSerializer)
 from django.http import JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from employee.constants import GRADE, MONTH, P_COUNT
@@ -23,11 +24,11 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = (filters.SearchFilter, )
     filter_backends = (DjangoFilterBackend,)
     search_fields = ('id',)
-    filterset_fields = ('username', 'first_name', 'last_name')
+    filterset_fields = ('id', 'username', 'first_name', 'last_name')
 
 
 class TeamViewSet(viewsets.ReadOnlyModelViewSet):
-    """Вьюсет модели
+    """Вьюсет модели команда
 
     http://localhost:8000/api/v1/team/?name=Медиа
     """
@@ -36,12 +37,12 @@ class TeamViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TeamSerializer
     filter_backends = (filters.SearchFilter, )
     filter_backends = (DjangoFilterBackend,)
-    search_fields = ('id', )
-    filterset_fields = ('name',)
+    search_fields = ('id', 'name')
+    filterset_fields = ('id', 'name',)
 
 
 class TeamMemberViewSet(viewsets.ReadOnlyModelViewSet):
-    """Вьюсет модели
+    """Вьюсет модели члены команды
 
     http://localhost:8000/api/v1/team/?name=Медиа
     """
@@ -50,55 +51,72 @@ class TeamMemberViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TeamMemberSerializer
     filter_backends = (filters.SearchFilter,)
     filter_backends = (DjangoFilterBackend,)
-    search_fields = ('id', )
-    filterset_fields = ('name',)
+    search_fields = ('id', 'name')
+    filterset_fields = ('id', 'name')
 
 
 class CompetenceViewSet(viewsets.ReadOnlyModelViewSet):
-    """Вьюсет модели"""
+    """Вьюсет модели компетенции
 
+    http://localhost:8000/api/v1/competence/?name=Знание иностранных языков
+    """
     queryset = Competence.objects.all()
     serializer_class = CompetenceSerializer
     filter_backends = (filters.SearchFilter, )
     filter_backends = (DjangoFilterBackend,)
-    search_fields = ('id', )
-    filterset_fields = ('name',)
+    search_fields = ('id', 'name')
+    filterset_fields = ('id', 'name',)
 
 
 class SkillViewSet(viewsets.ReadOnlyModelViewSet):
-    """Вьюсет модели"""
+    """Вьюсет модели навыки
 
+    http://localhost:8000/api/v1/skill/?name=Китайский язык
+    """
     queryset = Skill.objects.all()
     serializer_class = SkillSerializer
     filter_backends = (filters.SearchFilter, )
     filter_backends = (DjangoFilterBackend,)
-    search_fields = ('id', )
-    filterset_fields = ('name', 'domain')
+    search_fields = ('id', 'name', 'competence', 'domain')
+    filterset_fields = ('id', 'name', 'competence', 'domain')
 
 
 class RatingViewSet(viewsets.ReadOnlyModelViewSet):
-    """Вьюсет модели"""
+    """Вьюсет модели оценок на каждую дату аттестации
 
+    http://localhost:8000/api/v1/rating/?score=5
+    """
     queryset = Rating.objects.all()
     serializer_class = RaitingSerializer
+    filter_backends = (filters.SearchFilter, )
+    filter_backends = (DjangoFilterBackend,)
+    search_fields = ('id', 'score', 'date_score', 'match', 'need_to_study')
+    filterset_fields = ('id', 'score', 'date_score', 'match', 'need_to_study')
 
 
 class LastRatingViewSet(viewsets.ReadOnlyModelViewSet):
-    """Вьюсет модели"""
+    """Вьюсет модели последняя оценка сотрудника с прицепом временных оценок
+
+    http://localhost:8000/api/v1/lastrating/?user=1&skill=1
+    """
 
     queryset = LastRating.objects.all()
     serializer_class = LastRatingSerializer
+    filter_backends = (filters.SearchFilter, )
+    filter_backends = (DjangoFilterBackend,)
+    search_fields = ('id', 'user', 'skill', 'last_score', 'last_date', 'last_match',)
+    filterset_fields = ('id', 'user', 'skill', 'last_score', 'last_date', 'last_match',)
 
 
 class CandidateViewSet(viewsets.ReadOnlyModelViewSet):
-    """Вьюсет модели"""
+    """Вьюсет модели ссылки HH.RU для вакансий"""
 
     queryset = Candidate.objects.all()
     serializer_class = CandidateSerializer
 
 
 class VacancyViewSet(viewsets.ReadOnlyModelViewSet):
-    """Вьюсет модели"""
+    """Вьюсет модели вакансии"""
 
     queryset = Vacancy.objects.all()
     serializer_class = VacancySerializer
@@ -110,17 +128,21 @@ class VacancyViewSet(viewsets.ReadOnlyModelViewSet):
 
 class FilterList(generics.ListAPIView):
     """
-    Return a list of all with optional filtering.
+    Возвращает данные по команде с наложением вариантов фильтров
 
-    param1 -- http://localhost:8000/api/v1/filter/?team_id=team_id&user_id=user_id&skill_id=skill_id
-    param2 -- http://localhost:8000/api/v1/filter/?user_id=user_id&skill_id=skill_id (team_id=1 by default)
-    param3 -- http://localhost:8000/api/v1/filter/?team_id=team_id&competence_id=competence_id (skill&competence don't work together)
-    param4 -- http://localhost:8000/api/v1/filter/?team_id=team_id&grade=grade (grade_id=grade but working grade)
-    param5 -- http://localhost:8000/api/v1/filter/?team_id=team_id&month_id=month_id (comming soon, now only today)
+    count - подсчитывает количество сотрудников в команде
+    position_count - подсчитывает количество должностей в команде
+    key_count, bus_count comming soon
+
+    param1 -- http://localhost:8000/api/v1/filter/?team_id=1&user_id=1&skill_id=1
+    param2 -- http://localhost:8000/api/v1/filter/?user_id=1&skill_id=1 (team_id=1 by default)
+    param3 -- http://localhost:8000/api/v1/filter/?team_id=3&competence_id=1 (skill&competence don't work together)
+    param4 -- http://localhost:8000/api/v1/filter/?team_id=2&grade=Middle (grade_id=grade but working grade)
+    param5 -- http://localhost:8000/api/v1/filter/?team_id=4&month_id=0 (comming soon, now only today)
     """
 
     model = User
-    serializer_class = UserSerializer
+    serializer_class = FilterSerializer
     filter_fields = (
         'team_id',
         'user_id',
@@ -155,7 +177,7 @@ class FilterList(generics.ListAPIView):
 
 
 class ChoiceListSet(generics.ListAPIView):
-    """Return a list of chice for optional filtering in api/v1/filter."""
+    """Список возможных выборов(наполнение дропдаун меню на фронте) для фильтра в api/v1/filter."""
 
     def get_serializer_class(self):
         return 'fake_stub_serializer'
@@ -188,7 +210,7 @@ class ChoiceListSet(generics.ListAPIView):
 
 
 class PositionViewSet(viewsets.ReadOnlyModelViewSet):
-    """Вьюсет модели"""
+    """Вьюсет модели должность"""
 
     queryset = Position.objects.all()
     serializer_class = PositionSerializer
