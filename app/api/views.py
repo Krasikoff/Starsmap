@@ -13,7 +13,7 @@ from rest_framework import filters, generics, viewsets
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
-    """Вьюсет модели
+    """Вьюсет модели пользователи(сотрудники)
 
     http://localhost:8000/api/v1/user/?first_name=Роберт&last_name=Акимов
     """
@@ -128,11 +128,14 @@ class VacancyViewSet(viewsets.ReadOnlyModelViewSet):
 
 class FilterList(generics.ListAPIView):
     """
-    Возвращает данные по команде с наложением вариантов фильтров
+    Возвращает данные по команде с наложением вариантов фильтров и количественными счетчиками
 
     count - подсчитывает количество сотрудников в команде
     position_count - подсчитывает количество должностей в команде
-    key_count, bus_count comming soon
+    key_count - подсчитывает количество key сотрудников в команде
+    bus_count - подсчитывает количество bus сотрудников в команде
+    match_count, nomatch_count - подсчитывает количество соответствий навыков
+
 
     param1 -- http://localhost:8000/api/v1/filter/?team_id=1&user_id=1&skill_id=1
     param2 -- http://localhost:8000/api/v1/filter/?user_id=1&skill_id=1 (team_id=1 by default)
