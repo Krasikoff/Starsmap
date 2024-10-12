@@ -160,6 +160,7 @@ class LastRating(models.Model):
 
 class Rating(models.Model):
     """Таблица оценок навыков, компетенций."""
+
     last_rating = models.ForeignKey(
         LastRating,
         on_delete=models.CASCADE,

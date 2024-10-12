@@ -4,6 +4,15 @@ from employee.models import (Candidate, Competence, LastRating, Position,
 from rest_framework import serializers
 
 
+class IncrSrlz(serializers.Serializer):
+    _incr = 0
+    count = serializers.SerializerMethodField()
+
+    def get_count(self, obj):
+        self._incr += 1
+        return self._incr
+
+
 class TeamSerializer(serializers.ModelSerializer):
     """Сериалайзер модели"""
 
@@ -18,10 +27,11 @@ class PositionSerializer(serializers.ModelSerializer):
     """Сериалайзер модели"""
 
     users_count = serializers.IntegerField(source='user.count', read_only=True,)
+    incr_nmbr = IncrSrlz(read_only=True)
 
     class Meta:
         model = Position
-        fields = 'name', 'users_count'
+        fields = 'incr_nmbr', 'name', 'users_count'
 
 
 class CompetenceSerializer(serializers.ModelSerializer):
@@ -64,19 +74,30 @@ class LastRatingSerializer(serializers.ModelSerializer):
         fields = 'id', 'skill', 'last_score', 'last_match', 'last_date', 'last_score', 'rating'
 
 
+class ShortLastRatingSerializer(serializers.ModelSerializer):
+    """Сериалайзер модели"""
+
+    skill = SkillSerializer(read_only=True,)
+
+    class Meta:
+        model = LastRating
+        fields = 'id', 'skill', 'last_score', 'last_match', 'last_date', 'last_score',
+
+
 class UserSerializer(serializers.ModelSerializer):
     """Сериалайзер модели"""
 
-    position = serializers.CharField(read_only=True, default=0)
+    _incr = 0
+    position = serializers.CharField(read_only=True)
     lastrating = LastRatingSerializer(many=True, read_only=True)
     team = TeamSerializer(many=True, read_only=True)
-
+    count = serializers.SerializerMethodField()
     position_count = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = (
-            'id', 'first_name', 'last_name', 'date_hire', 'date_fire', 'team',
+            'count', 'id', 'first_name', 'last_name', 'date_hire', 'date_fire', 'team',
             'position', 'position_count', 'grade', 'role', 'key_people', 'bus_factor', 'emi',
             'lastrating',
         )
@@ -89,6 +110,42 @@ class UserSerializer(serializers.ModelSerializer):
         else:
             self.p_count[obj.position] = 1
         return self.p_count[obj.position]
+
+    def get_count(self, obj):
+        self._incr += 1
+        return self._incr
+
+
+class FilterSerializer(serializers.ModelSerializer):
+    """Сериалайзер модели"""
+
+    _incr = 0
+    position = serializers.CharField(read_only=True)
+    lastrating = ShortLastRatingSerializer(many=True, read_only=True)
+    team = TeamSerializer(many=True, read_only=True)
+    count = serializers.SerializerMethodField()
+    position_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = (
+            'count', 'id', 'first_name', 'last_name', 'date_hire', 'date_fire', 'team',
+            'position', 'position_count', 'grade', 'role', 'key_people', 'bus_factor', 'emi',
+            'lastrating',
+        )
+
+    p_count = P_COUNT
+
+    def get_position_count(self, obj):
+        if obj.position in self.p_count:
+            self.p_count[obj.position] += 1
+        else:
+            self.p_count[obj.position] = 1
+        return self.p_count[obj.position]
+
+    def get_count(self, obj):
+        self._incr += 1
+        return self._incr
 
 
 class CandidateSerializer(serializers.ModelSerializer):
