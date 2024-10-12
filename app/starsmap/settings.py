@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'secret')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 if app_stage == 'prod':
-    DEBUG = True
+    DEBUG = False
 else:
     DEBUG = True
 
