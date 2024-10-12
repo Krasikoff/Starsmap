@@ -77,11 +77,25 @@ class LastRatingSerializer(serializers.ModelSerializer):
 class ShortLastRatingSerializer(serializers.ModelSerializer):
     """Сериалайзер модели"""
 
+    _incr_match = 0
+    _incr_nomatch = 0
     skill = SkillSerializer(read_only=True,)
+    match_count = serializers.SerializerMethodField()
+    nomatch_count = serializers.SerializerMethodField()
 
     class Meta:
         model = LastRating
-        fields = 'id', 'skill', 'last_score', 'last_match', 'last_date', 'last_score',
+        fields = 'match_count', 'nomatch_count', 'id', 'skill', 'last_score', 'last_match', 'last_date', 'last_score',
+
+    def get_match_count(self, obj):
+        if obj.last_match:
+            self._incr_match += 1
+        return self._incr_match
+
+    def get_nomatch_count(self, obj):
+        if not obj.last_match:
+            self._incr_nomatch += 1
+        return self._incr_nomatch
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -120,17 +134,22 @@ class FilterSerializer(serializers.ModelSerializer):
     """Сериалайзер модели"""
 
     _incr = 0
+    _incr_key = 0
+    _incr_bus = 0
+
     position = serializers.CharField(read_only=True)
     lastrating = ShortLastRatingSerializer(many=True, read_only=True)
     team = TeamSerializer(many=True, read_only=True)
     count = serializers.SerializerMethodField()
     position_count = serializers.SerializerMethodField()
+    key_count = serializers.SerializerMethodField()
+    bus_count = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = (
             'count', 'id', 'first_name', 'last_name', 'date_hire', 'date_fire', 'team',
-            'position', 'position_count', 'grade', 'role', 'key_people', 'bus_factor', 'emi',
+            'position', 'position_count', 'grade', 'role', 'key_people', 'key_count', 'bus_factor', 'bus_count', 'emi',
             'lastrating',
         )
 
@@ -146,6 +165,16 @@ class FilterSerializer(serializers.ModelSerializer):
     def get_count(self, obj):
         self._incr += 1
         return self._incr
+
+    def get_key_count(self, obj):
+        if obj.key_people:
+            self._incr_key += 1
+        return self._incr_key
+
+    def get_bus_count(self, obj):
+        if obj.bus_factor:
+            self._incr_key += 1
+        return self._incr_key
 
 
 class CandidateSerializer(serializers.ModelSerializer):
