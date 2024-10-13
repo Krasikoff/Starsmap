@@ -31,7 +31,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'secret')
 # else:
 DEBUG = True
 
-ALLOWED_HOSTS = ['https://starsmap.ddns.net', 'http://127.0.0.1']
+ALLOWED_HOSTS = ['starsmap.ddns.net', '127.0.0.1', 'localhost']
 
 
 # Application definition
