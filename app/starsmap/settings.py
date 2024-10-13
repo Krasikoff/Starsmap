@@ -181,7 +181,7 @@ CORS_ALLOWED_ORIGINS = [
 
 PERSONAL_ACCOUNT_URL_NAME = 'me'
 
-CSRF_TRUSTED_ORIGINS = ['https://starsmap.ddns.net', 'https://127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://starsmap.ddns.net', '127.0.0.1', 'localhost']
 
 ADMINS = [
     ['admin', 'service@example.com']
