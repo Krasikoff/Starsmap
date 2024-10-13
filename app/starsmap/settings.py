@@ -26,12 +26,12 @@ app_stage = os.environ.get('APP_STAGE', 'dev')
 SECRET_KEY = os.environ.get('SECRET_KEY', 'secret')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if app_stage == 'prod':
-    DEBUG = True
-else:
-    DEBUG = True
+# if app_stage == 'prod':
+#     DEBUG = True
+# else:
+DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://starsmap.ddns.net', 'http://localhost:8000']
 
 
 # Application definition
@@ -181,7 +181,7 @@ CORS_ALLOWED_ORIGINS = [
 
 PERSONAL_ACCOUNT_URL_NAME = 'me'
 
-CSRF_TRUSTED_ORIGINS = ['https://starsmap.ddns.net', 'https://*.127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://starsmap.ddns.net', 'https://127.0.0.1']
 
 ADMINS = [
     ['admin', 'service@example.com']
