@@ -151,7 +151,8 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'https://rosbank-kappa.vercel.app',
     'http://127.0.0.1:8000',
-    'http://localhost:8000'
+    'http://localhost:8000',
+    'http://web:8000'
 ]
 
 PERSONAL_ACCOUNT_URL_NAME = 'me'
@@ -159,7 +160,8 @@ PERSONAL_ACCOUNT_URL_NAME = 'me'
 CSRF_TRUSTED_ORIGINS = [
     'https://starsmap.ddns.net',
     'http://127.0.0.1',
-    'http://localhost'
+    'http://localhost',
+    'http://web'
 ]
 
 ADMINS = [
