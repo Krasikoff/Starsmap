@@ -148,6 +148,12 @@ class LastRating(models.Model):
     last_score = models.IntegerField(
         choices=RATING, default=RATING[0][0], verbose_name='Последняя оценка'
     )
+    last_need_to_study = models.BooleanField(
+        default=False, verbose_name='Требуется обучение'
+    )
+    last_date_study = models.DateField(
+        default=datetime.datetime.now, verbose_name='Дата запроса обучения'
+    )
 
     class Meta:
         ordering = ['user', 'skill',]

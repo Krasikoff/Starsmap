@@ -15,9 +15,8 @@ from rest_framework import filters, generics, viewsets
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """Вьюсет модели пользователи(сотрудники)
 
-    http://localhost:8000/api/v1/user/?first_name=Роберт&last_name=Акимов
+    -- http://starsmap.ddns.net:8000/api/v1/user/?first_name=Роберт&last_name=Акимов
     """
-
     queryset = User.objects.all()
     serializer_class = UserSerializer
 #    permission_classes = (IsAdmin, )
@@ -30,7 +29,7 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
 class TeamViewSet(viewsets.ReadOnlyModelViewSet):
     """Вьюсет модели команда
 
-    http://localhost:8000/api/v1/team/?name=Медиа
+    -- -- http://starsmap.ddns.net:8000/api/v1/team/?name=Медиа
     """
 
     queryset = Team.objects.all()
@@ -44,7 +43,7 @@ class TeamViewSet(viewsets.ReadOnlyModelViewSet):
 class TeamMemberViewSet(viewsets.ReadOnlyModelViewSet):
     """Вьюсет модели члены команды
 
-    http://localhost:8000/api/v1/team/?name=Медиа
+    -- http://starsmap.ddns.net:8000/api/v1/teammember/?name=Медиа
     """
 
     queryset = Team.objects.all()
@@ -58,7 +57,7 @@ class TeamMemberViewSet(viewsets.ReadOnlyModelViewSet):
 class CompetenceViewSet(viewsets.ReadOnlyModelViewSet):
     """Вьюсет модели компетенции
 
-    http://localhost:8000/api/v1/competence/?name=Знание иностранных языков
+    -- http://starsmap.ddns.net:8000/api/v1/competence/?name=Знание%20иностранных%20языков
     """
     queryset = Competence.objects.all()
     serializer_class = CompetenceSerializer
@@ -71,7 +70,7 @@ class CompetenceViewSet(viewsets.ReadOnlyModelViewSet):
 class SkillViewSet(viewsets.ReadOnlyModelViewSet):
     """Вьюсет модели навыки
 
-    http://localhost:8000/api/v1/skill/?name=Китайский язык
+    -- http://starsmap.ddns.net:8000/api/v1/skill/?name=Китайский%20язык
     """
     queryset = Skill.objects.all()
     serializer_class = SkillSerializer
@@ -84,7 +83,7 @@ class SkillViewSet(viewsets.ReadOnlyModelViewSet):
 class RatingViewSet(viewsets.ReadOnlyModelViewSet):
     """Вьюсет модели оценок на каждую дату аттестации
 
-    http://localhost:8000/api/v1/rating/?score=5
+    -- http://starsmap.ddns.net:8000/api/v1/rating/?score=5
     """
     queryset = Rating.objects.all()
     serializer_class = RaitingSerializer
@@ -94,18 +93,23 @@ class RatingViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_fields = ('id', 'score', 'date_score', 'match', 'need_to_study')
 
 
-class LastRatingViewSet(viewsets.ReadOnlyModelViewSet):
+class LastRatingViewSet(viewsets.ModelViewSet):
     """Вьюсет модели последняя оценка сотрудника с прицепом временных оценок
 
-    http://localhost:8000/api/v1/lastrating/?user=1&skill=1
+    -- http://starsmap.ddns.net:8000/api/v1/lastrating/?user=1&skill=1
     """
 
     queryset = LastRating.objects.all()
     serializer_class = LastRatingSerializer
     filter_backends = (filters.SearchFilter, )
     filter_backends = (DjangoFilterBackend,)
-    search_fields = ('id', 'user', 'skill', 'last_score', 'last_date', 'last_match',)
-    filterset_fields = ('id', 'user', 'skill', 'last_score', 'last_date', 'last_match',)
+    search_fields = (
+        'id', 'user', 'skill', 'last_score', 'last_date', 'last_match',
+    )
+    filterset_fields = (
+        'id', 'user', 'skill', 'last_score', 'last_date', 'last_match',
+    )
+    http_method_names = ['get', 'patch']
 
 
 class CandidateViewSet(viewsets.ReadOnlyModelViewSet):
@@ -116,8 +120,10 @@ class CandidateViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class VacancyViewSet(viewsets.ReadOnlyModelViewSet):
-    """Вьюсет модели вакансии"""
+    """Вьюсет модели вакансии
 
+    -- http://starsmap.ddns.net:8000/api/v1/vacancy/?team=1
+    """
     queryset = Vacancy.objects.all()
     serializer_class = VacancySerializer
     filter_backends = (filters.SearchFilter, )
@@ -137,11 +143,11 @@ class FilterList(generics.ListAPIView):
     match_count, nomatch_count - подсчитывает количество соответствий навыков
 
 
-    param1 -- http://localhost:8000/api/v1/filter/?team_id=1&user_id=1&skill_id=1
-    param2 -- http://localhost:8000/api/v1/filter/?user_id=1&skill_id=1 (team_id=1 by default)
-    param3 -- http://localhost:8000/api/v1/filter/?team_id=3&competence_id=1 (skill&competence don't work together)
-    param4 -- http://localhost:8000/api/v1/filter/?team_id=2&grade=Middle (grade_id=grade but working grade)
-    param5 -- http://localhost:8000/api/v1/filter/?team_id=4&month_id=0 (comming soon, now only today)
+    param1 -- -- http://starsmap.ddns.net:8000/api/v1/filter/?team_id=1&user_id=2&skill_id=1
+    param2 -- -- http://starsmap.ddns.net:8000/api/v1/filter/?user_id=1&skill_id=1 (team_id=1 by default)
+    param3 -- -- http://starsmap.ddns.net:8000/api/v1/filter/?team_id=3&competence_id=1 (skill&competence don't work together)
+    param4 -- -- http://starsmap.ddns.net:8000/api/v1/filter/?team_id=2&grade=Middle (grade_id=grade but working grade)
+    param5 -- -- http://starsmap.ddns.net:8000/api/v1/filter/?team_id=4&month_id=0 (comming soon, now only today)
     """
 
     model = User
@@ -180,7 +186,10 @@ class FilterList(generics.ListAPIView):
 
 
 class ChoiceListSet(generics.ListAPIView):
-    """Список возможных выборов(наполнение дропдаун меню на фронте) для фильтра в api/v1/filter."""
+    """Список возможных выборов(наполнение дропдаун меню на фронте) для фильтра в api/v1/filter.
+
+    -- http://starsmap.ddns.net:8000/api/v1/choice/
+    """
 
     def get_serializer_class(self):
         return 'fake_stub_serializer'

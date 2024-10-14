@@ -134,6 +134,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Custom settings
 AUTH_USER_MODEL = 'employee.User'
 
+if app_stage == 'dev':
+    DEFAULT_API_URL = 'http://localhost:8000'
+else:
+    DEFAULT_API_URL = 'https://starsmap.ddns.net'
+
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
         'Bearer': {
@@ -142,7 +147,7 @@ SWAGGER_SETTINGS = {
             'in': 'header'
         }
     },
-    'DEFAULT_API_URL': 'https://starsmap.ddns.net'
+    'DEFAULT_API_URL': DEFAULT_API_URL
 }
 
 CORS_ORIGIN_ALLOW_ALL = True

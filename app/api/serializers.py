@@ -71,7 +71,11 @@ class LastRatingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = LastRating
-        fields = 'id', 'skill', 'last_score', 'last_match', 'last_date', 'last_score', 'rating'
+        fields = (
+            'id', 'skill', 'last_score',
+            'last_match', 'last_date', 'last_score', 'last_need_to_study',
+            'last_date_study', 'rating'
+        )
 
 
 class ShortLastRatingSerializer(serializers.ModelSerializer):
@@ -85,7 +89,11 @@ class ShortLastRatingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = LastRating
-        fields = 'match_count', 'nomatch_count', 'id', 'skill', 'last_score', 'last_match', 'last_date', 'last_score',
+        fields = (
+            'match_count', 'nomatch_count', 'id', 'skill', 'last_score',
+            'last_match', 'last_date', 'last_score', 'last_need_to_study',
+            'last_date_study'
+        )
 
     def get_match_count(self, obj):
         if obj.last_match:
