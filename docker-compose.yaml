@@ -10,7 +10,7 @@ services:
       - POSTGRES_DB=starsmap
 
   gateway:
-    build: ./gateway/
+    image: sobiy/starsmap_gateway:latest
     volumes:
       - static:/var/html/static
     ports:
