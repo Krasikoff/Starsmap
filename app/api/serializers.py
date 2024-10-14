@@ -240,3 +240,7 @@ class TeamMemberSerializer(serializers.ModelSerializer):
             'user',
             'vacancy',
         )
+
+
+class ChoiceListSerializer(serializers.BaseSerializer):
+    pass

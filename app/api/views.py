@@ -3,7 +3,7 @@ from api.serializers import (CandidateSerializer, CompetenceSerializer,
                              RaitingSerializer, SkillSerializer,
                              TeamMemberSerializer, TeamSerializer,
                              UserSerializer, VacancySerializer,
-                             FilterSerializer)
+                             FilterSerializer, ChoiceListSerializer)
 from django.http import JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from employee.constants import GRADE, MONTH, P_COUNT
@@ -192,7 +192,8 @@ class ChoiceListSet(generics.ListAPIView):
     """
 
     def get_serializer_class(self):
-        return 'fake_stub_serializer'
+#        return 'fake_stub_serializer'
+        return ChoiceListSerializer
 
     def list(self, *args, **kwargs):
         team = {}
