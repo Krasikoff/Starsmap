@@ -7,11 +7,10 @@ app_stage = os.environ.get('APP_STAGE', 'dev')
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'secret')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-# if app_stage == 'prod':
-#     DEBUG = True
-# else:
-DEBUG = True
+if app_stage == 'prod':
+    DEBUG = False
+else:
+    DEBUG = True
 
 ALLOWED_HOSTS = ['starsmap.ddns.net', '127.0.0.1', 'localhost']
 

@@ -79,12 +79,9 @@ jobs:
         script: |
           cd starsmap
           sudo docker-compose -f docker-compose.yaml pull
-          sudo docker-compose -f docker-compose.yaml down
-          sudo docker-compose -f docker-compose.yaml up -d
+          sudo docker-compose -f docker-compose.yaml stop
+          sudo docker-compose -f docker-compose.yaml up -d --build
           sudo docker exec starsmap_web_1 python manage.py makemigrations
           sudo docker exec starsmap_web_1 python manage.py migrate
           sudo docker exec starsmap_web_1 python manage.py collectstatic --no-input
-          sudo docker exec starsmap_web_1 python manage.py create_superuser
-          sudo docker exec starsmap_web_1 python manage.py upload_data
-          sudo docker exec starsmap_web_1 python manage.py refresh_last_data
           
