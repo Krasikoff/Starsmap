@@ -82,12 +82,13 @@ class LastRatingSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         for attr in validated_data:
             if attr == 'last_need_to_study':
-                last_date_study = tz.now()
+                instance.last_date_study = tz.now().date()
             else:
                 raise ValidationError(
                     'Разрешено изменение только поля last_need_to_study'
                 )
         return super().update(instance, validated_data)
+
 
 class ShortLastRatingSerializer(serializers.ModelSerializer):
     """Сериалайзер модели"""
