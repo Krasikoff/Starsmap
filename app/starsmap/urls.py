@@ -24,11 +24,11 @@ from rest_framework import permissions
 """
 URL api, админки, страниц, свагера.
 
-path('rating/', include('rating.urls', namespace='rating')) - рабочая, нужно только добавить в urlpatterns.
 """
 
 urlpatterns = [
     path('', include('homepage.urls', namespace='homepage')),
+    path('rating/', include('rating.urls', namespace='rating')),
     path('about/', include('about.urls', namespace='about')),
     path('api/', include('api.urls')),
     path('admin/', admin.site.urls),
