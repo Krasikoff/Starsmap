@@ -98,7 +98,12 @@ class RatingViewSet(viewsets.ReadOnlyModelViewSet):
 
 class LastRatingViewSet(viewsets.ModelViewSet):
     """Вьюсет модели последняя оценка сотрудника с прицепом временных оценок
-
+    PATCH - принимает на вход для изменения только одно поле обновляет last_date_study.
+    data:
+    {
+    "last_need_to_study": true
+    }
+    
     -- http://starsmap.ddns.net:8000/api/v1/lastrating/?user=1&skill=1
     """
 
@@ -118,7 +123,9 @@ class LastRatingViewSet(viewsets.ModelViewSet):
 class CandidateViewSet(viewsets.ModelViewSet):
     """Вьюсет модели ссылки HH.RU для вакансий
 
+    DEL - удаляет ссылку по ID.
     POST - создает с проверкой соответствия должности-команды-открыта(вакансия)
+    data:
     {
         "link": "https://hh.ru/vacancy/1234exsample1234",
         "vacancy": {
@@ -127,8 +134,6 @@ class CandidateViewSet(viewsets.ModelViewSet):
             "team": 2
         }
     }
-
-    DEL - удаляет ссылку по ID.
     """
 
     queryset = Candidate.objects.all()

@@ -1,3 +1,4 @@
+from django.utils import timezone as tz
 from django.core.exceptions import ValidationError
 from employee.constants import P_COUNT
 from employee.models import (Candidate, Competence, LastRating, Position,
@@ -78,6 +79,15 @@ class LastRatingSerializer(serializers.ModelSerializer):
             'last_date_study', 'rating'
         )
 
+    def update(self, instance, validated_data):
+        for attr in validated_data:
+            if attr == 'last_need_to_study':
+                last_date_study = tz.now()
+            else:
+                raise ValidationError(
+                    'Разрешено изменение только поля last_need_to_study'
+                )
+        return super().update(instance, validated_data)
 
 class ShortLastRatingSerializer(serializers.ModelSerializer):
     """Сериалайзер модели"""
