@@ -1,9 +1,9 @@
-from api.serializers import (CandidateSerializer, CompetenceSerializer,
+from api.serializers import (CandidateSerializer, ChoiceListSerializer,
+                             CompetenceSerializer, FilterSerializer,
                              LastRatingSerializer, PositionSerializer,
                              RaitingSerializer, SkillSerializer,
                              TeamMemberSerializer, TeamSerializer,
-                             UserSerializer, VacancySerializer,
-                             FilterSerializer, ChoiceListSerializer)
+                             UserSerializer, VacancySerializer)
 from django.http import JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from employee.constants import GRADE, MONTH, P_COUNT
@@ -17,9 +17,9 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
 
     -- http://starsmap.ddns.net:8000/api/v1/user/?first_name=Роберт&last_name=Акимов
     """
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
-#    permission_classes = (IsAdmin, )
     filter_backends = (filters.SearchFilter, )
     filter_backends = (DjangoFilterBackend,)
     search_fields = ('id',)
@@ -59,6 +59,7 @@ class CompetenceViewSet(viewsets.ReadOnlyModelViewSet):
 
     -- http://starsmap.ddns.net:8000/api/v1/competence/?name=Знание%20иностранных%20языков
     """
+
     queryset = Competence.objects.all()
     serializer_class = CompetenceSerializer
     filter_backends = (filters.SearchFilter, )
@@ -72,6 +73,7 @@ class SkillViewSet(viewsets.ReadOnlyModelViewSet):
 
     -- http://starsmap.ddns.net:8000/api/v1/skill/?name=Китайский%20язык
     """
+
     queryset = Skill.objects.all()
     serializer_class = SkillSerializer
     filter_backends = (filters.SearchFilter, )
@@ -85,6 +87,7 @@ class RatingViewSet(viewsets.ReadOnlyModelViewSet):
 
     -- http://starsmap.ddns.net:8000/api/v1/rating/?score=5
     """
+
     queryset = Rating.objects.all()
     serializer_class = RaitingSerializer
     filter_backends = (filters.SearchFilter, )
@@ -112,11 +115,25 @@ class LastRatingViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', 'patch']
 
 
-class CandidateViewSet(viewsets.ReadOnlyModelViewSet):
-    """Вьюсет модели ссылки HH.RU для вакансий"""
+class CandidateViewSet(viewsets.ModelViewSet):
+    """Вьюсет модели ссылки HH.RU для вакансий
+
+    POST - создает с проверкой соответствия должности-команды-открыта(вакансия)
+    {
+        "link": "https://hh.ru/vacancy/1234exsample1234",
+        "vacancy": {
+            "closed": false,
+            "position": 1,
+            "team": 2
+        }
+    }
+
+    DEL - удаляет ссылку по ID.
+    """
 
     queryset = Candidate.objects.all()
     serializer_class = CandidateSerializer
+    http_method_names = ['get', 'delete', 'post']
 
 
 class VacancyViewSet(viewsets.ReadOnlyModelViewSet):
@@ -124,6 +141,7 @@ class VacancyViewSet(viewsets.ReadOnlyModelViewSet):
 
     -- http://starsmap.ddns.net:8000/api/v1/vacancy/?team=1
     """
+
     queryset = Vacancy.objects.all()
     serializer_class = VacancySerializer
     filter_backends = (filters.SearchFilter, )
@@ -134,7 +152,7 @@ class VacancyViewSet(viewsets.ReadOnlyModelViewSet):
 
 class FilterList(generics.ListAPIView):
     """
-    Возвращает данные по команде с наложением вариантов фильтров и количественными счетчиками
+    Возвращает данные о команде с наложением вариантов фильтров и количественными счетчиками
 
     count - подсчитывает количество сотрудников в команде
     position_count - подсчитывает количество должностей в команде
@@ -192,7 +210,6 @@ class ChoiceListSet(generics.ListAPIView):
     """
 
     def get_serializer_class(self):
-#        return 'fake_stub_serializer'
         return ChoiceListSerializer
 
     def list(self, *args, **kwargs):
@@ -223,7 +240,10 @@ class ChoiceListSet(generics.ListAPIView):
 
 
 class PositionViewSet(viewsets.ReadOnlyModelViewSet):
-    """Вьюсет модели должность"""
+    """Вьюсет модели должность
+    
+    -- http://starsmap.ddns.net:8000/api/v1/position/
+    """
 
     queryset = Position.objects.all()
     serializer_class = PositionSerializer

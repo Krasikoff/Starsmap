@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from employee.constants import P_COUNT
 from employee.models import (Candidate, Competence, LastRating, Position,
                              Rating, Skill, Team, User, Vacancy)
@@ -185,16 +186,41 @@ class FilterSerializer(serializers.ModelSerializer):
         return self._incr_key
 
 
+class VacancyCandidateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Vacancy
+        fields = '__all__'
+
+
 class CandidateSerializer(serializers.ModelSerializer):
     """Сериалайзер модели"""
+    vacancy = VacancyCandidateSerializer()
 
     class Meta:
         model = Candidate
-        fields = 'link',
+        fields = 'link', 'vacancy'
+
+    def create(self, validated_data):
+        vacancy_data = validated_data.pop('vacancy', None)
+        vacancy = Vacancy.objects.filter(
+            position=vacancy_data['position'].id,
+            team=vacancy_data['team'].id,
+            closed=False
+        ).first()
+        if vacancy:
+            validated_data['vacancy_id'] = vacancy.id
+        else:
+            raise ValidationError(
+                f'Вакансия {vacancy_data["position"]} в команде '
+                f'{vacancy_data["team"]} закрыта или другое несоответствие вводимых данных.'
+            )
+        return super().create(validated_data)
 
 
 class VacancySerializer(serializers.ModelSerializer):
     """Сериалайзер модели"""
+
     team = serializers.StringRelatedField(read_only=True)
     position = serializers.StringRelatedField(read_only=True)
     candidate = CandidateSerializer(read_only=True, many=True)
@@ -206,6 +232,7 @@ class VacancySerializer(serializers.ModelSerializer):
 
 class UserInTeamSerializer(serializers.ModelSerializer):
     """Сериалайзер модели."""
+
     position = serializers.StringRelatedField(read_only=True)
 
     class Meta:
@@ -215,6 +242,7 @@ class UserInTeamSerializer(serializers.ModelSerializer):
 
 class VacancyInTeamSerializer(serializers.ModelSerializer):
     """Сериалайзер модели."""
+
     position = serializers.StringRelatedField(read_only=True)
 
     class Meta:
@@ -228,6 +256,7 @@ class TeamMemberSerializer(serializers.ModelSerializer):
     UserInTeamSerializer -> UserSerializer
     VacancyInTeamSerializer -> VacancySerializer
     """
+
     user = UserInTeamSerializer(many=True, read_only=True)
     vacancy = VacancyInTeamSerializer(many=True, read_only=True)
     leader = serializers.CharField(source='leaderinteam.leader')
@@ -243,4 +272,5 @@ class TeamMemberSerializer(serializers.ModelSerializer):
 
 
 class ChoiceListSerializer(serializers.BaseSerializer):
+    """stub сериалайзер"""
     pass
