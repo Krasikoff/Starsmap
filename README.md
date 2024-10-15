@@ -46,7 +46,7 @@ https://docs.google.com/document/d/1zQA5ZYlVIoJGP9H_3WA1eZyfj642sPDn/edit#headin
 Предоставленных данных в XL таблице  app/data.csv
 После запуска и загрузки данных получаем много вспомагательных и несколько рабочих route - choice для наполнения меню фильтра и filter, для выдачи данных фронту в соответствии с выборами и динамическим подсчетом отображаемых на фронте параметров - количество должностей в команде, количество навыков, компетенций ...
 router patch lastrating изменяет поля о потребности в обучении и дату изменения.
-router vacancy добавляет, удаляет ссылки кандидатов на должность. 
+router candidate добавляет, удаляет ссылки кандидатов на должность. 
 
 Админка настроена так,что в ней вручную (не оптимизировано) можно вести работу HR, руководителя, донастроив авторизацию. https://starsmap.ddns.net/admin/
 
@@ -58,13 +58,13 @@ https://starsmap.ddns.net/swagger/
 ``` shell
 git clone https://github.com/Krasikoff/Starsmap
 ```
-настроить в settings django CORS_ALLOWED_ORIGINS, ALLOWED_HOSTS и
+настроить в settings django CORS_ALLOWED_ORIGINS, ALLOWED_HOSTS
 ``` shell
 docker-compose up -d --build
 ```
 
 ## Запуск локально.
-- подготовка, скачиваем с гит
+- подготовка, скачиваем репозиторий
 ``` shell
 git clone https://github.com/Krasikoff/Starsmap
 ```
