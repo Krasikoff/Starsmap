@@ -99,6 +99,11 @@ python manage.py createsuperuser
 ``` shell
 python3 manage.py generateschema > schema.yaml 
 ```
+- для запуска юнит-тестов
+``` shell
+cd app/
+python manage.py test -v 2
+```
 
 ## Свагер:
 
