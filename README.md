@@ -1,4 +1,4 @@
-# Starsmap
+# Starsmap ![CI](https://github.com/Krasikoff/Starsmap/actions/workflows/main.yml/badge.svg)
 
 ## Описание. 
 Starsmap - это система по оценке компетенций сотрудника. Дашборд аналитики по навыкам в команде, который позволит руководителю увидеть состояние навыков в команде и поможет в развитии команды.  
