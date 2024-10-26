@@ -227,26 +227,14 @@ class ChoiceListSet(generics.ListAPIView):
         return ChoiceListSerializer
 
     def list(self, *args, **kwargs):
-        team = {}
-        teams = Team.objects.all()
-        for each_team in teams:
-            team[each_team.id] = each_team.name
-
-        competence = {}
-        competences = Competence.objects.all()
-        for each_competence in competences:
-            competence[each_competence.id] = each_competence.name
-
-        skill = {}
-        skills = Skill.objects.all()
-        for each_skill in skills:
-            skill[each_skill.id] = each_skill.name
-
+        team = Team.objects.values_list('id', 'name')
+        competence = Competence.objects.values_list('id', 'name')
+        skill = Skill.objects.values_list('id', 'name')
         grade = dict(GRADE)
         month = MONTH
         choices = [
-            {'team': team}, {'competence': competence}, {'skill': skill},
-            {'month': month}, {'grade': grade},
+            {'team': dict(team)}, {'competence': dict(competence)},
+            {'skill': dict(skill)}, {'month': month}, {'grade': grade},
         ]
         return JsonResponse(data={
             'choices': choices
