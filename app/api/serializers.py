@@ -1,6 +1,5 @@
-from django.utils import timezone as tz
 from django.core.exceptions import ValidationError
-from employee.constants import P_COUNT
+from django.utils import timezone as tz
 from employee.models import (Candidate, Competence, LastRating, Position,
                              Rating, Skill, Team, User, Vacancy)
 from rest_framework import serializers
@@ -121,33 +120,17 @@ class ShortLastRatingSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     """Сериалайзер модели"""
 
-    _incr = 0
     position = serializers.CharField(read_only=True)
     lastrating = LastRatingSerializer(many=True, read_only=True)
     team = TeamSerializer(many=True, read_only=True)
-    count = serializers.SerializerMethodField()
-    position_count = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = (
-            'count', 'id', 'first_name', 'last_name', 'date_hire', 'date_fire', 'team',
-            'position', 'position_count', 'grade', 'role', 'key_people', 'bus_factor', 'emi',
+            'id', 'first_name', 'last_name', 'date_hire', 'date_fire', 'team',
+            'position', 'grade', 'role', 'key_people', 'bus_factor', 'emi',
             'lastrating',
         )
-
-    p_count = P_COUNT
-
-    def get_position_count(self, obj):
-        if obj.position in self.p_count:
-            self.p_count[obj.position] += 1
-        else:
-            self.p_count[obj.position] = 1
-        return self.p_count[obj.position]
-
-    def get_count(self, obj):
-        self._incr += 1
-        return self._incr
 
 
 class FilterSerializer(serializers.ModelSerializer):
@@ -156,6 +139,7 @@ class FilterSerializer(serializers.ModelSerializer):
     _incr = 0
     _incr_key = 0
     _incr_bus = 0
+    _pcount = {}
 
     position = serializers.CharField(read_only=True)
     lastrating = ShortLastRatingSerializer(many=True, read_only=True)
@@ -173,14 +157,14 @@ class FilterSerializer(serializers.ModelSerializer):
             'lastrating',
         )
 
-    p_count = P_COUNT
-
     def get_position_count(self, obj):
-        if obj.position in self.p_count:
-            self.p_count[obj.position] += 1
+        if self._incr == 1:
+            self._pcount.clear()
+        if obj.position in self._pcount:
+            self._pcount[obj.position] += 1
         else:
-            self.p_count[obj.position] = 1
-        return self.p_count[obj.position]
+            self._pcount[obj.position] = 1
+        return self._pcount[obj.position]
 
     def get_count(self, obj):
         self._incr += 1

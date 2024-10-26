@@ -1,15 +1,7 @@
 from http import HTTPStatus
 
-from django.test import TestCase, Client
-
-from employee.models import (
-    Competence,
-    Position,
-    Skill,
-    Team,
-    User,
-    Vacancy,
-)
+from django.test import Client, TestCase
+from employee.models import Competence, Position, Skill, Team, User, Vacancy
 
 
 class StaticURLTests(TestCase):
