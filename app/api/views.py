@@ -6,7 +6,7 @@ from api.serializers import (CandidateSerializer, ChoiceListSerializer,
                              UserSerializer, VacancySerializer)
 from django.http import JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend
-from employee.constants import GRADE, MONTH, P_COUNT
+from employee.constants import GRADE, MONTH
 from employee.models import (Candidate, Competence, LastRating, Position,
                              Rating, Skill, Team, User, Vacancy)
 from rest_framework import filters, generics, viewsets
@@ -18,7 +18,8 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     -- http://starsmap.ddns.net:8000/api/v1/user/?first_name=Роберт&last_name=Акимов
     """
 
-    queryset = User.objects.all()
+    queryset = User.objects.all().select_related(
+        'position').prefetch_related('lastrating').prefetch_related('team')
     serializer_class = UserSerializer
     filter_backends = (filters.SearchFilter, )
     filter_backends = (DjangoFilterBackend,)
@@ -32,7 +33,7 @@ class TeamViewSet(viewsets.ReadOnlyModelViewSet):
     -- -- http://starsmap.ddns.net:8000/api/v1/team/?name=Медиа
     """
 
-    queryset = Team.objects.all()
+    queryset = Team.objects.all().select_related('leaderinteam')
     serializer_class = TeamSerializer
     filter_backends = (filters.SearchFilter, )
     filter_backends = (DjangoFilterBackend,)
@@ -46,7 +47,8 @@ class TeamMemberViewSet(viewsets.ReadOnlyModelViewSet):
     -- http://starsmap.ddns.net:8000/api/v1/teammember/?name=Медиа
     """
 
-    queryset = Team.objects.all()
+    queryset = Team.objects.all().select_related(
+        'leaderinteam').prefetch_related('user')
     serializer_class = TeamMemberSerializer
     filter_backends = (filters.SearchFilter,)
     filter_backends = (DjangoFilterBackend,)
@@ -74,7 +76,7 @@ class SkillViewSet(viewsets.ReadOnlyModelViewSet):
     -- http://starsmap.ddns.net:8000/api/v1/skill/?name=Китайский%20язык
     """
 
-    queryset = Skill.objects.all()
+    queryset = Skill.objects.all().select_related('competence')
     serializer_class = SkillSerializer
     filter_backends = (filters.SearchFilter, )
     filter_backends = (DjangoFilterBackend,)
@@ -90,7 +92,7 @@ class RatingViewSet(viewsets.ReadOnlyModelViewSet):
 
     queryset = Rating.objects.all()
     serializer_class = RaitingSerializer
-    filter_backends = (filters.SearchFilter, )
+    filter_backends = (filters.SearchFilter,)
     filter_backends = (DjangoFilterBackend,)
     search_fields = ('id', 'score', 'date_score', 'match', 'need_to_study')
     filterset_fields = ('id', 'score', 'date_score', 'match', 'need_to_study')
@@ -99,7 +101,7 @@ class RatingViewSet(viewsets.ReadOnlyModelViewSet):
 class LastRatingViewSet(viewsets.ModelViewSet):
     """Вьюсет модели последняя оценка сотрудника с прицепом временных оценок
 
-    PATCH - принимает на вход для изменения только last_need_to_study 
+    PATCH - принимает на вход для изменения только last_need_to_study
     и обновляет last_date_study.
 
     -- http://starsmap.ddns.net:8000/api/v1/lastrating/1/
@@ -110,7 +112,8 @@ class LastRatingViewSet(viewsets.ModelViewSet):
     }
     """
 
-    queryset = LastRating.objects.all()
+    queryset = LastRating.objects.all().select_related(
+        'user').select_related('skill').prefetch_related('rating')
     serializer_class = LastRatingSerializer
     filter_backends = (filters.SearchFilter, )
     filter_backends = (DjangoFilterBackend,)
@@ -142,7 +145,7 @@ class CandidateViewSet(viewsets.ModelViewSet):
     }
     """
 
-    queryset = Candidate.objects.all()
+    queryset = Candidate.objects.all().select_related('vacancy')
     serializer_class = CandidateSerializer
     http_method_names = ['get', 'delete', 'post']
 
@@ -153,7 +156,8 @@ class VacancyViewSet(viewsets.ReadOnlyModelViewSet):
     -- http://starsmap.ddns.net:8000/api/v1/vacancy/?team=1
     """
 
-    queryset = Vacancy.objects.all()
+    queryset = Vacancy.objects.all().select_related(
+        'team').select_related('position')
     serializer_class = VacancySerializer
     filter_backends = (filters.SearchFilter, )
     filter_backends = (DjangoFilterBackend,)
@@ -188,7 +192,8 @@ class FilterList(generics.ListAPIView):
     )
 
     def get_queryset(self):
-        queryset = User.objects.all()
+        queryset = User.objects.all().select_related(
+            'position').prefetch_related('lastrating').prefetch_related('team')
         user_id = self.request.query_params.get('user_id', )
         team_id = self.request.query_params.get('team_id', 1)
         grade = self.request.query_params.get('grade')
@@ -197,7 +202,6 @@ class FilterList(generics.ListAPIView):
         queryset = queryset.filter(team=team_id,)
         if user_id:
             queryset = queryset.filter(id=user_id, team=team_id,)
-
         if grade:
             queryset = queryset.filter(grade=grade,)
         if skill_id:
@@ -210,7 +214,6 @@ class FilterList(generics.ListAPIView):
                 lastrating__skill__competence_id=competence_id,
                 lastrating__last_match=True,
             )
-        P_COUNT.clear()
         return queryset
 
 
@@ -252,7 +255,7 @@ class ChoiceListSet(generics.ListAPIView):
 
 class PositionViewSet(viewsets.ReadOnlyModelViewSet):
     """Вьюсет модели должность
-    
+
     -- http://starsmap.ddns.net:8000/api/v1/position/
     """
 

@@ -1,5 +1,4 @@
 from django.test import TestCase
-
 from employee.models import Position, Team, User
 
 
