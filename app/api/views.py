@@ -19,13 +19,11 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """
 
     queryset = User.objects.all().prefetch_related('lastrating', 'lastrating__rating',)
-#    queryset = User.objects.prefetch_related('lastrating','team')
     serializer_class = UserSerializer
     filter_backends = (filters.SearchFilter, )
     filter_backends = (DjangoFilterBackend,)
     search_fields = ('id',)
     filterset_fields = ('id', 'username', 'first_name', 'last_name')
-    print(queryset.query)
 
 
 class TeamViewSet(viewsets.ReadOnlyModelViewSet):
@@ -214,7 +212,6 @@ class FilterList(generics.ListAPIView):
                 lastrating__skill__competence_id=competence_id,
                 lastrating__last_match=True,
             )
-        print(queryset.query)
         return queryset
 
 
@@ -228,26 +225,14 @@ class ChoiceListSet(generics.ListAPIView):
         return ChoiceListSerializer
 
     def list(self, *args, **kwargs):
-        team = {}
-        teams = Team.objects.all()
-        for each_team in teams:
-            team[each_team.id] = each_team.name
-
-        competence = {}
-        competences = Competence.objects.all()
-        for each_competence in competences:
-            competence[each_competence.id] = each_competence.name
-
-        skill = {}
-        skills = Skill.objects.all()
-        for each_skill in skills:
-            skill[each_skill.id] = each_skill.name
-
+        team = Team.objects.values_list('id', 'name')
+        competence = Competence.objects.values_list('id', 'name')
+        skill = Skill.objects.values_list('id', 'name')
         grade = dict(GRADE)
         month = MONTH
         choices = [
-            {'team': team}, {'competence': competence}, {'skill': skill},
-            {'month': month}, {'grade': grade},
+            {'team': dict(team)}, {'competence': dict(competence)},
+            {'skill': dict(skill)}, {'month': month}, {'grade': grade},
         ]
         return JsonResponse(data={
             'choices': choices
