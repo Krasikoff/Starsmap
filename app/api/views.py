@@ -19,13 +19,11 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """
 
     queryset = User.objects.all().prefetch_related('lastrating', 'lastrating__rating',)
-#    queryset = User.objects.prefetch_related('lastrating','team')
     serializer_class = UserSerializer
     filter_backends = (filters.SearchFilter, )
     filter_backends = (DjangoFilterBackend,)
     search_fields = ('id',)
     filterset_fields = ('id', 'username', 'first_name', 'last_name')
-    print(queryset.query)
 
 
 class TeamViewSet(viewsets.ReadOnlyModelViewSet):
@@ -214,7 +212,6 @@ class FilterList(generics.ListAPIView):
                 lastrating__skill__competence_id=competence_id,
                 lastrating__last_match=True,
             )
-        print(queryset.query)
         return queryset
 
 
