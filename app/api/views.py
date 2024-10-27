@@ -18,13 +18,14 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     -- http://starsmap.ddns.net:8000/api/v1/user/?first_name=Роберт&last_name=Акимов
     """
 
-    queryset = User.objects.all().select_related(
-        'position').prefetch_related('lastrating').prefetch_related('team')
+    queryset = User.objects.all().prefetch_related('lastrating', 'lastrating__rating',)
+#    queryset = User.objects.prefetch_related('lastrating','team')
     serializer_class = UserSerializer
     filter_backends = (filters.SearchFilter, )
     filter_backends = (DjangoFilterBackend,)
     search_fields = ('id',)
     filterset_fields = ('id', 'username', 'first_name', 'last_name')
+    print(queryset.query)
 
 
 class TeamViewSet(viewsets.ReadOnlyModelViewSet):
@@ -113,7 +114,7 @@ class LastRatingViewSet(viewsets.ModelViewSet):
     """
 
     queryset = LastRating.objects.all().select_related(
-        'user').select_related('skill').prefetch_related('rating')
+        'skill').prefetch_related('rating')
     serializer_class = LastRatingSerializer
     filter_backends = (filters.SearchFilter, )
     filter_backends = (DjangoFilterBackend,)
@@ -192,8 +193,7 @@ class FilterList(generics.ListAPIView):
     )
 
     def get_queryset(self):
-        queryset = User.objects.all().select_related(
-            'position').prefetch_related('lastrating').prefetch_related('team')
+        queryset = User.objects.all().prefetch_related('lastrating', 'lastrating__skill')
         user_id = self.request.query_params.get('user_id', )
         team_id = self.request.query_params.get('team_id', 1)
         grade = self.request.query_params.get('grade')
@@ -207,13 +207,14 @@ class FilterList(generics.ListAPIView):
         if skill_id:
             queryset = queryset.filter(
                 lastrating__skill__id=skill_id,
-                lastrating__last_match=True,
+                lastrating__last_match__exact=True,
             )
         if competence_id and (not skill_id):
             queryset = queryset.filter(
                 lastrating__skill__competence_id=competence_id,
                 lastrating__last_match=True,
             )
+        print(queryset.query)
         return queryset
 
 
